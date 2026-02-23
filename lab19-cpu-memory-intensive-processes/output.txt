@@ -1,0 +1,111 @@
+Lab 19 – Identifying and Killing CPU/Memory Intensive Processes
+Ubuntu 24.04.1 LTS
+Host: ip-172-31-10-502
+User: toor
+
+-------------------------------------------------
+Monitoring with top
+-------------------------------------------------
+$ top
+
+top - 18:42:17 up 12 min,  1 user,  load average: 0.48, 0.22, 0.11
+Tasks: 118 total,   1 running, 117 sleeping
+%Cpu(s): 18.3 us,  3.1 sy,  0.0 ni, 78.2 id
+MiB Mem : 1990.2 total, 852.4 free, 612.5 used, 525.3 buff/cache
+
+PID   USER   PR  NI   %CPU %MEM COMMAND
+1523  toor   20   0   42.5  0.2  stress
+
+-------------------------------------------------
+Using ps for Analysis
+-------------------------------------------------
+$ ps aux --sort=-%cpu | head -6
+
+USER   PID   %CPU %MEM COMMAND
+toor  1523   42.5  0.2  stress
+root   812    3.0  0.4  systemd
+
+$ ps aux --sort=-%mem | head -6
+
+USER   PID   %CPU %MEM COMMAND
+root   920    1.1  3.2  gnome-shell
+toor  1523   42.5  0.2  stress
+
+-------------------------------------------------
+Simulate CPU Load
+-------------------------------------------------
+$ stress --cpu 1 &
+[1] 1523
+
+$ pgrep -l stress
+1523 stress
+
+-------------------------------------------------
+Graceful Termination
+-------------------------------------------------
+$ kill 1523
+
+$ ps -p 1523
+(no output)
+
+Process terminated successfully.
+
+-------------------------------------------------
+Forceful Termination
+-------------------------------------------------
+$ stress --cpu 1 &
+[1] 1602
+
+$ kill -9 1602
+
+Process immediately terminated.
+
+-------------------------------------------------
+Using killall
+-------------------------------------------------
+$ stress --cpu 1 &
+$ stress --cpu 1 &
+
+$ killall stress
+
+$ pgrep stress
+(no output)
+
+All stress processes terminated.
+
+-------------------------------------------------
+Launch with nice
+-------------------------------------------------
+$ nice -n 19 yes > /dev/null &
+[1] 1701
+
+$ top
+
+PID   USER   PR  NI  %CPU COMMAND
+1701  toor   39  19  98.5 yes
+
+-------------------------------------------------
+Modify Priority with renice
+-------------------------------------------------
+$ sudo renice -n 10 -p 1701
+1701 (process ID) old priority 19, new priority 10
+
+$ top
+
+PID   USER   PR  NI  %CPU COMMAND
+1701  toor   30  10  97.8 yes
+
+-------------------------------------------------
+Cleanup
+-------------------------------------------------
+$ killall yes
+
+-------------------------------------------------
+Lab Status
+-------------------------------------------------
+Process monitoring validated.
+CPU-intensive process identified.
+Processes terminated successfully.
+Priority adjustment confirmed.
+
+Lab 19 Completed Successfully.
