@@ -1,0 +1,109 @@
+========================================
+Lab 17 – Operating Running Systems
+Environment: Ubuntu 24.04.1 LTS
+User: toor
+Hostname: ip-172-31-10-402
+========================================
+
+
+--- Task 1: Reboot System ---
+
+$ sudo reboot
+
+[sudo] password for toor:
+Connection to 172.31.10.402 closed by remote host.
+Connection to 172.31.10.402 closed.
+
+(User reconnects after reboot)
+
+$ uptime
+17:58:14 up 1 min,  1 user,  load average: 0.08, 0.03, 0.01
+
+
+--- Task 1: Schedule Shutdown ---
+
+$ sudo shutdown -h +10 "System will shut down in 10 minutes"
+
+Shutdown scheduled for Sun 2026-02-23 18:10:00 UTC, use 'shutdown -c' to cancel.
+
+Broadcast message from root@ip-172-31-10-402:
+System will shut down in 10 minutes
+
+
+--- Cancel Shutdown ---
+
+$ sudo shutdown -c
+Shutdown cancelled.
+
+
+--- Task 2: Using top ---
+
+$ top
+
+top - 17:59:42 up 3 min,  1 user,  load average: 0.05, 0.02, 0.01
+Tasks: 112 total,   1 running, 111 sleeping
+%Cpu(s):  2.3 us,  1.0 sy,  0.0 ni, 96.2 id
+MiB Mem :   1990.3 total,   1450.4 free,   210.3 used,   329.6 buff/cache
+
+(Press q to exit)
+
+
+--- Task 2: Using ps ---
+
+$ ps aux | head
+
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.3 169944  9504 ?        Ss   17:56   0:01 /sbin/init
+root       425  0.0  0.1  73240  3700 ?        Ss   17:56   0:00 sshd: toor
+toor       980  0.0  0.1  10400  3200 pts/0    Ss   17:58   0:00 -bash
+
+
+--- Task 2: Using htop ---
+
+$ htop
+
+(Interactive interface showing CPU and memory usage)
+(Press F10 to exit)
+
+
+--- Task 3: Start Background Process ---
+
+$ sleep 300 &
+[1] 1042
+
+
+--- Find Process ---
+
+$ pgrep -l sleep
+1042 sleep
+
+
+--- Kill Process ---
+
+$ kill -9 1042
+
+$ pgrep sleep
+(no output)
+
+
+--- Start Multiple Processes ---
+
+$ sleep 400 &
+$ sleep 400 &
+
+$ pgrep -l sleep
+1101 sleep
+1102 sleep
+
+
+--- Kill All by Name ---
+
+$ pkill -9 sleep
+
+$ pgrep sleep
+(no output)
+
+
+========================================
+Running System Operations & Process Management Verified
+========================================
