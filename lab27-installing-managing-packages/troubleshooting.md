@@ -1,4 +1,4 @@
-# ✅ Troubleshooting Guide — Lab 27: Installing & Managing Software Packages
+# 🛠️ Troubleshooting Guide — Lab 27: Installing & Managing Software Packages
 
 ---
 
