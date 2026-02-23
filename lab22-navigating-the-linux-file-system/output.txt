@@ -1,0 +1,214 @@
+/home/centos
+
+total 76
+dr-xr-xr-x.  18 root root  4096 Feb 23 12:05 .
+dr-xr-xr-x.  18 root root  4096 Feb 23 12:05 ..
+lrwxrwxrwx.   1 root root     7 Aug  7  2020 bin -> usr/bin
+dr-xr-xr-x.   5 root root  4096 Feb 23 12:03 boot
+drwxr-xr-x.  19 root root  3020 Feb 23 12:05 dev
+drwxr-xr-x.  79 root root  8192 Feb 23 12:04 etc
+drwxr-xr-x.   3 root root    20 Feb 23 12:02 home
+lrwxrwxrwx.   1 root root     7 Aug  7  2020 lib -> usr/lib
+lrwxrwxrwx.   1 root root     9 Aug  7  2020 lib64 -> usr/lib64
+drwxr-xr-x.   2 root root     6 Apr 11  2018 media
+drwxr-xr-x.   2 root root     6 Apr 11  2018 mnt
+drwxr-xr-x.   2 root root     6 Apr 11  2018 opt
+dr-xr-xr-x. 103 root root     0 Feb 23 12:05 proc
+dr-xr-x---.   3 root root   161 Feb 23 12:04 root
+drwxr-xr-x.  11 root root   140 Feb 23 12:05 run
+lrwxrwxrwx.   1 root root     8 Aug  7  2020 sbin -> usr/sbin
+drwxr-xr-x.   2 root root     6 Apr 11  2018 srv
+dr-xr-xr-x.  13 root root     0 Feb 23 12:05 sys
+drwxrwxrwt.   8 root root   180 Feb 23 12:05 tmp
+drwxr-xr-x.  13 root root   155 Aug  7  2020 usr
+drwxr-xr-x.  20 root root   278 Feb 23 12:04 var
+
+bash  cat  chmod  chown  cp  date  echo  find  grep  hostname  kill  ls  mkdir  mv  ps  pwd  rm  rmdir  sed  tar  touch  uname  vi
+
+centos
+
+adjtime  aliases  alternatives  anacrontab  bashrc  cron.d  cron.daily  environment  fstab  hosts  hostname  issue  logrotate.d  passwd  profile  resolv.conf  ssh  sysconfig
+
+account  cache  db  empty  lib  local  lock  log  mail  opt  run  spool  tmp
+
+/home/centos/lab2/documents/projects
+
+/home/centos/lab2/downloads
+
+lab2
+
+centos
+
+/home
+
+/home/centos
+
+/home/centos/lab2/documents/projects/project1.txt
+/home/centos/lab2/documents/report.txt
+/home/centos/lab2/downloads/software.tar.gz
+/home/centos/lab2/scripts/backup.sh
+/home/centos/lab2/scripts/hello.sh
+
+/home/centos/lab2
+/home/centos/lab2/documents
+/home/centos/lab2/documents/projects
+/home/centos/lab2/downloads
+/home/centos/lab2/scripts
+
+/home/centos/lab2/documents/projects/project1.txt
+/home/centos/lab2/documents/report.txt
+
+/home/centos/lab2/documents/projects/project1.txt
+/home/centos/lab2/documents/report.txt
+
+/home/centos/lab2/scripts/hello.sh
+
+-rw-r--r--. 1 centos centos  0 Feb 23 12:18 /home/centos/lab2/scripts/backup.sh
+-rwxr-xr-x. 1 centos centos 31 Feb 23 12:18 /home/centos/lab2/scripts/hello.sh
+
+/etc/dracut.conf
+/etc/ld.so.conf
+/etc/man_db.conf
+/etc/nsswitch.conf
+/etc/resolv.conf
+/etc/rsyslog.conf
+/etc/security/limits.conf
+/etc/sysctl.conf
+/etc/yum.conf
+
+/var/log/boot.log
+/var/log/cron.log
+/var/log/maillog
+/var/log/messages
+/var/log/secure
+
+-bash: sudo: command not found
+
+Loaded plugins: fastestmirror
+Resolving Dependencies
+Installed:
+  mlocate.x86_64 0:0.26-8.el7
+  sudo.x86_64 0:1.8.23-10.el7
+Complete!
+
+/home/centos/lab2/documents/report.txt
+
+/etc/dracut.conf
+/etc/ld.so.conf
+/etc/man_db.conf
+/etc/nsswitch.conf
+/etc/resolv.conf
+/etc/rsyslog.conf
+/etc/security/limits.conf
+/etc/sysctl.conf
+/etc/yum.conf
+/usr/share/doc/initscripts-9.49.53/sysconfig.txt
+
+/home/centos/lab2/documents/report.txt
+
+18
+
+/etc/passwd
+/usr/bin/passwd
+/usr/share/man/man1/passwd.1.gz
+
+real    0m0.007s
+user    0m0.003s
+sys     0m0.003s
+
+/etc/passwd
+/usr/bin/passwd
+/usr/share/man/man1/passwd.1.gz
+
+real    0m2.148s
+user    0m0.093s
+sys     0m0.214s
+
+/usr/bin/ls
+/usr/bin/find
+/usr/bin/bash
+/usr/bin/python3
+
+/usr/bin/ls
+/usr/bin/find
+/usr/bin/grep
+/usr/bin/awk
+
+/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/centos/.local/bin:/home/centos/bin
+
+/usr/bin/python
+/bin/python
+
+/home/centos/lab2/scripts/hello.sh
+
+Hello, World!
+
+/home/centos/lab2/company/it
+/home/centos/lab2/company/it/servers
+/home/centos/lab2/company/it
+/home/centos/lab2/company/hr/reports
+/home/centos/lab2/company/finance/archives
+/home/centos/lab2/company/it/workstations
+
+total 4
+-rw-r--r--. 1 centos centos 14 Feb 23 12:31 annual.txt
+
+total 4
+-rw-r--r--. 1 centos centos 13 Feb 23 12:31 config.txt
+
+annual.txt
+
+/home/centos/lab2/company/finance/archives
+/home/centos/lab2/company/it/servers
+/home/centos/lab2/documents/projects
+/home/centos/lab2/company/hr/reports
+/home/centos/lab2/documents/projects
+/home/centos/lab2/company/hr/reports
+
+/home/centos/lab2/documents/projects/project1.txt
+/home/centos/lab2/documents/report.txt
+
+total 8
+-rw-r--r--. 1 centos centos 14 Feb 23 12:36 annual.txt
+-rw-r--r--. 1 centos centos  0 Feb 23 12:36 project1.txt
+-rw-r--r--. 1 centos centos  0 Feb 23 12:36 report.txt
+
+/home/centos/development/projects/web
+/home/centos/development/projects/mobile
+/home/centos/development/tools
+
+/home/centos/lab2/company/it/servers
+/home/centos/lab2/documents
+
+/home/centos/lab2/scripts/backup.sh
+/home/centos/lab2/scripts/hello.sh
+
+/usr/bin/bash
+
+/home/centos/lab2
+/home/centos/lab2/documents
+/home/centos/lab2/documents/projects
+/home/centos/lab2/downloads
+/home/centos/lab2/scripts
+/home/centos/lab2/company
+/home/centos/lab2/company/hr
+/home/centos/lab2/company/hr/reports
+/home/centos/lab2/company/hr/archives
+/home/centos/lab2/company/finance
+/home/centos/lab2/company/finance/reports
+/home/centos/lab2/company/finance/archives
+/home/centos/lab2/company/it
+/home/centos/lab2/company/it/servers
+/home/centos/lab2/company/it/workstations
+/home/centos/lab2/all_txt_files
+/home/centos/lab2/scripts/backup.sh
+/home/centos/lab2/scripts/hello.sh
+/home/centos/lab2/company/it/servers/config.txt
+/home/centos/lab2/company/it/workstations/config.txt
+/home/centos/lab2/company/hr/archives/annual.txt
+/home/centos/lab2/documents/projects/project1.txt
+/home/centos/lab2/documents/report.txt
+/home/centos/lab2/downloads/software.tar.gz
+/home/centos/lab2/all_txt_files/annual.txt
+/home/centos/lab2/all_txt_files/project1.txt
+/home/centos/lab2/all_txt_files/report.txt
