@@ -1,0 +1,148 @@
+===============================================
+Lab 40: Managing and Troubleshooting Services
+Environment: CentOS / RHEL 9
+User: root
+===============================================
+
+------------------------------------------------
+Task 1: Service Management
+------------------------------------------------
+
+-bash-4.2$ systemctl list-units --type=service
+UNIT                         LOAD   ACTIVE SUB     DESCRIPTION
+NetworkManager.service       loaded active running Network Manager
+sshd.service                 loaded active running OpenSSH server daemon
+firewalld.service            loaded active running firewalld
+rsyslog.service              loaded active running System Logging Service
+chronyd.service              loaded active running NTP client/server
+...
+
+-bash-4.2$ systemctl list-units --type=service --state=failed
+0 loaded units listed.
+
+-bash-4.2$ systemctl status sshd
+● sshd.service - OpenSSH server daemon
+     Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled)
+     Active: active (running) since Mon 2026-02-23 10:15:12 IST
+   Main PID: 841 (sshd)
+
+------------------------------------------------
+Creating Failing Service
+------------------------------------------------
+
+-bash-4.2$ systemctl start lab-failing.service
+
+-bash-4.2$ systemctl status lab-failing.service
+● lab-failing.service - Lab Failing Service
+     Loaded: loaded (/etc/systemd/system/lab-failing.service; enabled)
+     Active: failed (Result: exit-code)
+    Process: 4211 ExecStart=/opt/lab-scripts/failing-service.sh (code=exited, status=1/FAILURE)
+
+-bash-4.2$ journalctl -u lab-failing.service
+Service starting...
+Service attempting to access non-existent file...
+cat: /nonexistent/file.txt: No such file or directory
+
+------------------------------------------------
+Service Fix Verification
+------------------------------------------------
+
+-bash-4.2$ systemctl restart lab-failing.service
+
+-bash-4.2$ systemctl status lab-failing.service
+● lab-failing.service
+     Active: active (exited)
+
+-bash-4.2$ journalctl -u lab-failing.service --since "1 minute ago"
+Service starting...
+Service running successfully...
+Current date: Mon Feb 23 12:45:01 IST 2026
+Service completed successfully
+
+------------------------------------------------
+Task 2: Network Diagnostics
+------------------------------------------------
+
+-bash-4.2$ ip addr show
+inet 192.168.1.105/24 brd 192.168.1.255 scope global eth0
+
+-bash-4.2$ ip route show
+default via 192.168.1.1 dev eth0
+
+-bash-4.2$ ping -c 4 8.8.8.8
+4 packets transmitted, 4 received, 0% packet loss
+
+-bash-4.2$ ping -c 4 google.com
+4 packets transmitted, 4 received, 0% packet loss
+
+------------------------------------------------
+Simulated DNS Failure
+------------------------------------------------
+
+-bash-4.2$ nslookup google.com
+;; connection timed out; no servers could be reached
+
+------------------------------------------------
+DNS Fix Verification
+------------------------------------------------
+
+-bash-4.2$ nslookup google.com
+Server: 8.8.8.8
+Address: 8.8.8.8#53
+
+Non-authoritative answer:
+Name: google.com
+Address: 142.250.182.14
+
+------------------------------------------------
+System-Wide Checks
+------------------------------------------------
+
+-bash-4.2$ systemctl --failed
+0 loaded units listed.
+
+-bash-4.2$ journalctl -p err | tail -5
+cat: /nonexistent/file.txt: No such file or directory
+
+-bash-4.2$ journalctl --disk-usage
+Archived and active journals take up 48.0M in the file system.
+
+------------------------------------------------
+Service Health Check Script
+------------------------------------------------
+
+-bash-4.2$ /opt/lab-scripts/service-health-check.sh
+
+=== System Service Health Check ===
+Date: Mon Feb 23 13:05:44 IST 2026
+
+=== Critical Services Status ===
+✓ sshd: ACTIVE
+✓ NetworkManager: ACTIVE
+✓ firewalld: ACTIVE
+✓ rsyslog: ACTIVE
+
+=== Failed Services ===
+✓ No failed services
+
+=== Network Connectivity ===
+✓ Internet connectivity: OK
+✓ DNS resolution: OK
+
+Root filesystem: 18% used
+
+Health check completed.
+
+------------------------------------------------
+Lab Validation
+------------------------------------------------
+
+-bash-4.2$ systemctl status lab-failing.service
+Active: active (exited)
+
+-bash-4.2$ ping -c 2 google.com
+2 packets transmitted, 2 received, 0% packet loss
+
+===============================================
+Lab 40 Completed Successfully
+===============================================
