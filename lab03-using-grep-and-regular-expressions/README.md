@@ -1,4 +1,4 @@
-# 🔎 Lab 03 – Using grep and Regular Expressions (RHCSA Series)
+# 🔎 Lab 03 – Using grep and Regular Expressions
 
 # 🎯 Objectives
 
