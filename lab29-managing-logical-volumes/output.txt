@@ -1,0 +1,193 @@
+========================================
+Task 1: Disk Identification
+========================================
+
+$ lsblk
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sda      8:0    0  40G  0 disk
+└─sda1   8:1    0  40G  0 part /
+sdb      8:16   0  20G  0 disk
+sdc      8:32   0  20G  0 disk
+sdd      8:48   0  20G  0 disk
+
+$ pvs
+  PV   VG   Fmt  Attr PSize PFree
+  (no output – clean state)
+
+
+========================================
+Task 1: Physical Volume Creation
+========================================
+
+$ sudo pvcreate /dev/sdb
+Physical volume "/dev/sdb" successfully created.
+
+$ sudo pvcreate /dev/sdc
+Physical volume "/dev/sdc" successfully created.
+
+$ sudo pvcreate /dev/sdd
+Physical volume "/dev/sdd" successfully created.
+
+$ sudo pvs
+  PV         VG   Fmt  Attr PSize   PFree
+  /dev/sdb        lvm2 ---  <20.00g <20.00g
+  /dev/sdc        lvm2 ---  <20.00g <20.00g
+  /dev/sdd        lvm2 ---  <20.00g <20.00g
+
+
+========================================
+Task 2: Volume Group Creation
+========================================
+
+$ sudo vgcreate vg_data /dev/sdb /dev/sdc
+Volume group "vg_data" successfully created
+
+$ sudo vgs
+  VG       #PV #LV #SN Attr   VSize   VFree
+  vg_data    2   0   0 wz--n- <39.99g <39.99g
+
+$ sudo vgcreate vg_backup /dev/sdd
+Volume group "vg_backup" successfully created
+
+$ sudo vgreduce vg_backup /dev/sdd
+Removed "/dev/sdd" from volume group "vg_backup"
+
+$ sudo vgextend vg_data /dev/sdd
+Volume group "vg_data" successfully extended
+
+$ sudo vgs
+  VG      #PV #LV #SN Attr   VSize   VFree
+  vg_data   3   0   0 wz--n- <59.99g <59.99g
+
+
+========================================
+Task 3: Logical Volume Creation
+========================================
+
+$ sudo lvcreate -L 10G -n lv_web vg_data
+Logical volume "lv_web" created.
+
+$ sudo lvcreate -L 5G -n lv_database vg_data
+Logical volume "lv_database" created.
+
+$ sudo lvcreate -l 50%VG -n lv_logs vg_data
+Logical volume "lv_logs" created.
+
+$ sudo lvs
+  LV          VG      Attr       LSize
+  lv_database vg_data -wi-a-----  5.00g
+  lv_logs     vg_data -wi-a----- 30.00g
+  lv_web      vg_data -wi-a----- 10.00g
+
+
+========================================
+Task 3: Formatting & Mounting
+========================================
+
+$ df -h
+Filesystem                          Size Used Avail Use% Mounted on
+/dev/mapper/vg_data-lv_web          9.8G  24M  9.3G   1% /mnt/web
+/dev/mapper/vg_data-lv_database     5.0G  40M  5.0G   1% /mnt/database
+/dev/mapper/vg_data-lv_logs          30G  52M   28G   1% /mnt/logs
+
+$ mount | grep vg_data
+/dev/mapper/vg_data-lv_web on /mnt/web type ext4
+/dev/mapper/vg_data-lv_database on /mnt/database type xfs
+/dev/mapper/vg_data-lv_logs on /mnt/logs type ext4
+
+
+========================================
+Test File Verification
+========================================
+
+$ ls -la /mnt/web
+index.html
+
+$ ls -la /mnt/database
+data.sql
+
+$ ls -la /mnt/logs
+app.log
+
+$ du -sh /mnt/web /mnt/database /mnt/logs
+24K  /mnt/web
+4.0K /mnt/database
+24K  /mnt/logs
+
+
+========================================
+Task 4: LV Extension
+========================================
+
+$ sudo lvextend -L +5G /dev/vg_data/lv_web
+Logical volume vg_data/lv_web successfully resized.
+
+$ sudo resize2fs /dev/vg_data/lv_web
+Filesystem resized successfully.
+
+$ sudo lvextend -L +3G /dev/vg_data/lv_database
+Logical volume vg_data/lv_database successfully resized.
+
+$ sudo xfs_growfs /mnt/database
+data blocks changed from 1310720 to 2097152
+
+$ sudo lvextend -L +2G -r /dev/vg_data/lv_logs
+Logical volume vg_data/lv_logs successfully resized.
+Filesystem resized successfully.
+
+$ df -h /mnt/web /mnt/database /mnt/logs
+/dev/mapper/vg_data-lv_web        15G  28M  14G   1% /mnt/web
+/dev/mapper/vg_data-lv_database    8G  60M   8G   1% /mnt/database
+/dev/mapper/vg_data-lv_logs       32G  56M  30G   1% /mnt/logs
+
+
+========================================
+Monitoring Commands
+========================================
+
+$ sudo pvs
+/dev/sdb vg_data lvm2 a-- <20.00g     0
+/dev/sdc vg_data lvm2 a-- <20.00g     0
+/dev/sdd vg_data lvm2 a-- <20.00g <4.99g
+
+$ sudo vgs
+vg_data 3 3 0 wz--n- <59.99g <4.99g
+
+$ sudo lvs
+lv_database vg_data  8.00g
+lv_logs     vg_data 32.00g
+lv_web      vg_data 15.00g
+
+
+========================================
+Persistent Mount Test
+========================================
+
+$ sudo mount -a
+(no errors)
+
+$ df -h | grep vg_data
+/dev/mapper/vg_data-lv_web        15G  28M  14G   1% /mnt/web
+/dev/mapper/vg_data-lv_database    8G  60M   8G   1% /mnt/database
+/dev/mapper/vg_data-lv_logs       32G  56M  30G   1% /mnt/logs
+
+
+========================================
+Snapshot Test
+========================================
+
+$ sudo lvs -o +origin,snap_percent
+lv_web_snapshot     vg_data 1.00g lv_web      0.00
+lv_database_snapshot vg_data 1.00g lv_database 0.00
+
+$ cat /mnt/web/index.html
+Web server data
+Modified web content
+
+$ cat /mnt/web_snapshot/index.html
+Web server data
+
+
+========================================
+Lab 29 Completed Successfully
+========================================
