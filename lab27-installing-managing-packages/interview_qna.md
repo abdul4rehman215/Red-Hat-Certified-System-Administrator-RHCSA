@@ -1,4 +1,4 @@
-# 🎤 interview Q&A — Lab 7: Installing & Managing Software Packages
+# 🎤 interview Q&A — Lab 27: Installing & Managing Software Packages
 
 ## 1) Core Concepts (RHCSA-style)
 
