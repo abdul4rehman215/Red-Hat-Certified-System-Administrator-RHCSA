@@ -1,0 +1,105 @@
+============================================================
+Lab 08 – Managing Files and Directories
+Environment: Ubuntu 24.04.1 LTS
+Hostname: ip-172-31-10-205
+User: toor
+============================================================
+
+------------------------------------------------------------
+Environment Verification
+------------------------------------------------------------
+
+toor@ip-172-31-10-205:~$ cat /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+
+------------------------------------------------------------
+Task 1 – Creating Directories
+------------------------------------------------------------
+
+toor@ip-172-31-10-205:~$ mkdir lab_files
+(No output — directory created)
+
+toor@ip-172-31-10-205:~$ ls
+Desktop  Documents  Downloads  lab_files  Music  Pictures  Public  Templates  Videos
+✔ lab_files appears.
+
+------------------------------------------------------------
+Create Nested Directory Structure
+------------------------------------------------------------
+
+toor@ip-172-31-10-205:~$ mkdir -p parent/child/grandchild
+
+toor@ip-172-31-10-205:~$ sudo apt install tree -y
+Reading package lists... Done
+Building dependency tree... Done
+The following NEW packages will be installed:
+  tree
+Setting up tree ...
+
+toor@ip-172-31-10-205:~$ tree parent
+parent
+└── child
+    └── grandchild
+
+2 directories, 0 files
+✔ Nested directory structure verified.
+
+------------------------------------------------------------
+Task 2 – Moving, Copying, Deleting Files
+------------------------------------------------------------
+
+toor@ip-172-31-10-205:~$ touch sample.txt
+
+toor@ip-172-31-10-205:~$ mv sample.txt lab_files/
+
+toor@ip-172-31-10-205:~$ ls lab_files/
+sample.txt
+✔ File successfully moved.
+
+toor@ip-172-31-10-205:~$ cp lab_files/sample.txt lab_files/sample_copy.txt
+
+toor@ip-172-31-10-205:~$ ls lab_files/
+sample.txt  sample_copy.txt
+✔ Both files present.
+
+toor@ip-172-31-10-205:~$ rm lab_files/sample_copy.txt
+
+toor@ip-172-31-10-205:~$ ls lab_files/
+sample.txt
+✔ Only sample.txt remains.
+
+------------------------------------------------------------
+Task 3 – Directory Removal
+------------------------------------------------------------
+
+toor@ip-172-31-10-205:~$ rmdir parent/child/grandchild
+(No output — success)
+
+toor@ip-172-31-10-205:~$ rm -r parent
+
+toor@ip-172-31-10-205:~$ ls
+Desktop  Documents  Downloads  lab_files  Music  Pictures  Public  Templates  Videos
+✔ parent directory removed.
+
+------------------------------------------------------------
+Task 4 – Wildcard Operations
+------------------------------------------------------------
+
+toor@ip-172-31-10-205:~$ touch lab_files/file{1..5}.txt
+
+toor@ip-172-31-10-205:~$ ls lab_files/
+file1.txt  file2.txt  file3.txt  file4.txt  file5.txt  sample.txt
+
+toor@ip-172-31-10-205:~$ rm lab_files/*.txt
+
+toor@ip-172-31-10-205:~$ ls lab_files/
+(No output — directory empty)
+✔ lab_files is now empty.
+
+============================================================
+Lab 08 Completed Successfully
+File & Directory Management Skills Verified
+============================================================
