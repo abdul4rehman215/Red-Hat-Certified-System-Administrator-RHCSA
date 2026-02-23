@@ -1,0 +1,164 @@
+==============================
+Lab 11 – Using System Documentation
+Environment: CentOS Linux 7 (Core)
+User: centos
+Hostname: ip-172-31-10-176
+==============================
+
+$ cat /etc/os-release
+NAME="CentOS Linux"
+VERSION="7 (Core)"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="7"
+PRETTY_NAME="CentOS Linux 7 (Core)"
+
+--------------------------------------------------
+
+$ man ls
+LS(1)                          User Commands                         LS(1)
+
+NAME
+       ls - list directory contents
+
+SYNOPSIS
+       ls [OPTION]... [FILE]...
+
+DESCRIPTION
+       List information about the FILEs (the current directory by default).
+
+       -R, --recursive
+              list subdirectories recursively
+
+(Navigation performed using arrow keys and search)
+q (quit)
+
+--------------------------------------------------
+
+$ man 5 passwd
+PASSWD(5)                   File Formats Manual                  PASSWD(5)
+
+NAME
+       passwd - the password file
+
+DESCRIPTION
+       /etc/passwd contains one line for each user account:
+       name:password:UID:GID:GECOS:directory:shell
+
+q (quit)
+
+--------------------------------------------------
+
+$ man -f passwd
+passwd (1)           - update user's authentication tokens
+passwd (5)           - the password file
+
+--------------------------------------------------
+
+$ info coreutils
+File: coreutils.info,  Node: Top
+
+GNU Core Utilities
+******************
+
+This manual documents the GNU utilities.
+
+* ls invocation::
+* cp invocation::
+* mv invocation::
+
+q (quit)
+
+--------------------------------------------------
+
+$ info coreutils ls invocation
+ls invocation
+==============
+
+‘ls’ lists files and directories.
+
+q (quit)
+
+--------------------------------------------------
+
+$ man -k network
+ifconfig (8)       - configure a network interface
+network (8)        - network service control script
+networkctl (1)     - query the status of network links
+
+--------------------------------------------------
+
+$ apropos network
+ifconfig (8)       - configure a network interface
+network (8)        - network service control script
+networkctl (1)     - query the status of network links
+
+--------------------------------------------------
+
+$ sudo mandb
+Processing manual pages under /usr/share/man...
+Updating index cache for path `/usr/share/man/man1'. Wait...done.
+Updating index cache for path `/usr/share/man/man5'. Wait...done.
+Updating index cache for path `/usr/share/man/man8'. Wait...done.
+Database correctly re-built.
+
+--------------------------------------------------
+
+$ grep --help
+Usage: grep [OPTION]... PATTERN [FILE]...
+Search for PATTERN in each FILE.
+
+  -i, --ignore-case
+  -r, --recursive
+  -n, --line-number
+  -v, --invert-match
+
+--------------------------------------------------
+
+$ ls /usr/share/doc | head
+bash-4.2.46
+coreutils-8.22
+grep-2.20
+nano-2.3.1
+vim-common-7.4
+
+--------------------------------------------------
+
+$ ls /usr/share/doc/bash-4.2.46
+CHANGES
+COMPAT
+COPYING
+README
+
+--------------------------------------------------
+
+$ less /usr/share/doc/bash-4.2.46/README
+This is the GNU Bash shell.
+Bash is an sh-compatible shell that incorporates useful features from the Korn shell.
+
+q (quit)
+
+--------------------------------------------------
+
+$ sudo yum install -y httpd-manual
+Loaded plugins: fastestmirror
+Resolving Dependencies
+--> Running transaction check
+--> Package httpd-manual.x86_64 0:2.4.x.el7 will be installed
+--> Finished Dependency Resolution
+
+Installed:
+  httpd-manual.x86_64 0:2.4.x.el7
+
+Complete!
+
+--------------------------------------------------
+
+$ ls /usr/share/doc/httpd-manual
+LICENSE
+manual
+
+==============================
+Lab Completed Successfully
+System Documentation Skills Verified
+==============================
