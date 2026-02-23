@@ -1,0 +1,164 @@
+===============================
+Lab 35: Managing Disk Quotas
+CentOS/RHEL 8/9 (XFS on /)
+===============================
+
+[1] df -h
+--------------------------------
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p1   32G  4.2G   28G  14% /
+devtmpfs        1.8G     0  1.8G   0% /dev
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           1.9G   17M  1.9G   1% /run
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+tmpfs           373M  4.0K  373M   1% /run/user/1000
+
+
+[2] cat /etc/fstab
+--------------------------------
+#
+# /etc/fstab
+# Created by anaconda on Fri Aug 18 10:41:02 2026
+#
+UUID=1c9d0b8a-7d11-4b1a-93aa-2c9f9b9b1a11  /  xfs  defaults,uquota,gquota  0 0
+tmpfs     /dev/shm  tmpfs  defaults  0 0
+devpts    /dev/pts  devpts gid=5,mode=620  0 0
+sysfs     /sys      sysfs  defaults  0 0
+proc      /proc     proc   defaults  0 0
+
+
+[3] rpm -qa | grep quota
+--------------------------------
+quota-4.06-5.el9.x86_64
+quota-nls-4.06-5.el9.noarch
+
+
+[4] mount | grep " on / "
+--------------------------------
+/dev/nvme0n1p1 on / type xfs (rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,prjquota,uquota,gquota)
+
+
+[5] sudo xfs_quota -x -c 'state' /
+--------------------------------
+User quota state on / (/dev/nvme0n1p1)
+  Accounting: ON
+  Enforcement: ON
+  Inode: #0 (ON)
+
+Group quota state on / (/dev/nvme0n1p1)
+  Accounting: ON
+  Enforcement: ON
+  Inode: #0 (ON)
+
+Project quota state on / (/dev/nvme0n1p1)
+  Accounting: ON
+  Enforcement: ON
+  Inode: #0 (ON)
+
+
+[6] Creating users
+--------------------------------
+useradd testuser1
+useradd testuser2
+useradd testuser3
+
+passwd testuser1
+passwd: all authentication tokens updated successfully.
+
+passwd testuser2
+passwd: all authentication tokens updated successfully.
+
+passwd testuser3
+passwd: all authentication tokens updated successfully.
+
+
+[7] edquota -u testuser1
+--------------------------------
+Disk quotas for user testuser1 (uid 1001):
+  Filesystem                   blocks       soft       hard     inodes     soft     hard
+  /dev/nvme0n1p1                    0      50000     100000          0        0        0
+
+
+[8] edquota -u testuser2
+--------------------------------
+Disk quotas for user testuser2 (uid 1002):
+  Filesystem                   blocks       soft       hard     inodes     soft     hard
+  /dev/nvme0n1p1                    0      25000      50000          0      100      150
+
+
+[9] edquota -p testuser1 testuser3
+--------------------------------
+Copied quotas from user testuser1 to user testuser3
+
+
+[10] edquota -t
+--------------------------------
+Grace period before enforcing soft limits for users:
+Time units may be: days, hours, minutes, or seconds
+
+  Filesystem              Block grace period     Inode grace period
+  /dev/nvme0n1p1           7days                  7days
+
+
+[11] quota -u testuser1 -h
+--------------------------------
+Disk quotas for user testuser1 (uid 1001):
+     Filesystem   size   quota   limit   grace   files   quota   limit   grace
+      /dev/nvme0n1p1      0K     49M     98M            0       0       0
+
+
+[12] repquota -h /
+--------------------------------
+*** Report for user quotas on device /dev/nvme0n1p1
+Block grace time: 7days; Inode grace time: 7days
+
+                        Space limits                File limits
+User            used    soft    hard  grace    used  soft  hard  grace
+----------------------------------------------------------------------
+root      --     4.0G      0K      0K          60234     0     0
+testuser1 --     0.0K     49M     98M              2     0     0
+testuser2 --     0.0K     25M     49M              2   100   150
+testuser3 --     0.0K     49M     98M              2     0     0
+
+
+[13] Enforcement Test
+--------------------------------
+sudo su - testuser1
+
+dd if=/dev/zero of=testfile1 bs=1M count=40
+40+0 records in
+40+0 records out
+41943040 bytes (42 MB, 40 MiB) copied, 0.072341 s, 580 MB/s
+
+quota -u
+Disk quotas for user testuser1 (uid 1001):
+     Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+      /dev/nvme0n1p1  40960*  50000  100000   6days      3       0       0
+
+(* indicates soft limit exceeded — grace period active)
+
+
+dd if=/dev/zero of=testfile2 bs=1M count=70
+dd: error writing 'testfile2': Disk quota exceeded
+59+0 records in
+58+0 records out
+60817408 bytes (61 MB, 58 MiB) copied, 0.104981 s, 580 MB/s
+
+
+[14] Quota violation check
+--------------------------------
+sudo repquota / | grep -E '\+|\*'
+
+testuser1 +-     40960   50000  100000   6days        3     0     0
+
+
+[15] warnquota
+--------------------------------
+Checking quotas...
+Done.
+No users are over their quota limits by grace period.
+
+
+===============================
+Result: Quota successfully enabled and enforced
+===============================
