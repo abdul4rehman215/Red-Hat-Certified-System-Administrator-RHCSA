@@ -1,0 +1,238 @@
+========================================
+Task 1: systemctl Basics
+========================================
+
+$ systemctl status
+● ip-172-31-18-204
+    State: running
+     Jobs: 0 queued
+   Failed: 0 units
+    Since: Mon 2026-02-23 18:10:21 UTC; 1h 12min ago
+   CGroup: /
+           ├─1 /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+           └─...
+
+--------------------------------------------------
+
+$ systemctl list-units --type=service --state=active
+
+UNIT                          LOAD   ACTIVE SUB     DESCRIPTION
+auditd.service                loaded active running Security Auditing Service
+crond.service                 loaded active running Command Scheduler
+dbus.service                  loaded active running D-Bus System Message Bus
+sshd.service                  loaded active running OpenSSH server daemon
+systemd-journald.service      loaded active running Journal Service
+lvm2-monitor.service          loaded active running Monitoring of LVM2
+
+--------------------------------------------------
+
+$ systemctl list-units --type=service --all
+
+UNIT                          LOAD   ACTIVE   SUB     DESCRIPTION
+sshd.service                  loaded active   running OpenSSH server daemon
+httpd.service                 loaded inactive dead    The Apache HTTP Server
+lvm2-monitor.service          loaded active   running Monitoring of LVM2
+
+--------------------------------------------------
+
+$ systemctl is-enabled sshd
+enabled
+
+$ systemctl is-enabled httpd
+disabled
+
+
+========================================
+Managing SSH Service
+========================================
+
+$ systemctl status sshd
+● sshd.service - OpenSSH server daemon
+   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled)
+   Active: active (running) since Mon 2026-02-23 18:10:30 UTC; 1h ago
+ Main PID: 842 (sshd)
+
+--------------------------------------------------
+
+$ sudo systemctl stop sshd
+(no output)
+
+$ systemctl status sshd
+● sshd.service - OpenSSH server daemon
+   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled)
+   Active: inactive (dead)
+
+--------------------------------------------------
+
+$ sudo systemctl start sshd
+(no output)
+
+$ sudo systemctl restart sshd
+(no output)
+
+$ sudo systemctl reload sshd
+(no output)
+
+
+========================================
+Enable / Disable Service
+========================================
+
+$ systemctl is-enabled sshd
+enabled
+
+$ sudo systemctl disable sshd
+Removed /etc/systemd/system/multi-user.target.wants/sshd.service.
+
+$ sudo systemctl enable --now sshd
+Created symlink from /etc/systemd/system/multi-user.target.wants/sshd.service to /usr/lib/systemd/system/sshd.service.
+
+
+========================================
+Apache HTTP Server Installation & Management
+========================================
+
+$ sudo yum install -y httpd
+
+Installed:
+  httpd.x86_64 0:2.4.57-8.el8
+
+Complete!
+
+--------------------------------------------------
+
+$ sudo systemctl start httpd
+(no output)
+
+$ systemctl status httpd
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled)
+   Active: active (running)
+ Main PID: 2021 (httpd)
+
+--------------------------------------------------
+
+$ sudo systemctl enable httpd
+Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+
+
+========================================
+Boot Target Configuration
+========================================
+
+$ systemctl get-default
+multi-user.target
+
+--------------------------------------------------
+
+$ systemctl list-units --type=target
+
+UNIT                 LOAD   ACTIVE SUB    DESCRIPTION
+multi-user.target    loaded active active Multi-User System
+basic.target         loaded active active Basic System
+
+--------------------------------------------------
+
+$ systemctl list-dependencies
+
+multi-user.target
+● ├─auditd.service
+● ├─crond.service
+● ├─sshd.service
+● └─httpd.service
+
+--------------------------------------------------
+
+$ sudo systemctl set-default multi-user.target
+Removed /etc/systemd/system/default.target.
+Created symlink /etc/systemd/system/default.target → /usr/lib/systemd/system/multi-user.target.
+
+$ systemctl get-default
+multi-user.target
+
+
+========================================
+journalctl Usage
+========================================
+
+$ journalctl -b | head
+Feb 23 18:10:21 systemd[1]: Started Journal Service.
+Feb 23 18:10:21 systemd[1]: Starting LVM2 metadata daemon...
+Feb 23 18:10:22 systemd[1]: Started OpenSSH server daemon.
+Feb 23 18:10:22 systemd[1]: Started Command Scheduler.
+
+--------------------------------------------------
+
+$ journalctl -u sshd -n 5
+Feb 23 19:02:31 sshd[1241]: Accepted publickey for centos from 172.31.10.5
+Feb 23 19:05:11 sshd[1302]: Received disconnect from 172.31.10.5
+
+--------------------------------------------------
+
+$ journalctl -u httpd -n 5
+Feb 23 19:15:22 httpd[2021]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name
+Feb 23 19:15:22 systemd[1]: Started The Apache HTTP Server.
+
+
+========================================
+Failing Service Scenario
+========================================
+
+$ systemctl status test-fail.service
+● test-fail.service - Test Service That Fails
+   Loaded: loaded (/etc/systemd/system/test-fail.service; disabled)
+   Active: failed (Result: exit-code)
+  Process: 2450 ExecStart=/usr/bin/nonexistent-command (code=exited, status=203/EXEC)
+
+--------------------------------------------------
+
+$ journalctl -u test-fail.service -n 5
+systemd[2450]: test-fail.service: Failed to execute command: No such file or directory
+systemd[2450]: test-fail.service: Failed at step EXEC spawning /usr/bin/nonexistent-command: No such file or directory
+
+
+========================================
+Apache Practical Test
+========================================
+
+$ curl http://localhost
+
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Systemd Lab Test Page</title>
+</head>
+<body>
+ <h1>Welcome to the Systemd Management Lab!</h1>
+ <p>This page is served by Apache, managed through systemd.</p>
+</body>
+</html>
+
+--------------------------------------------------
+
+$ sudo systemctl stop httpd
+
+$ curl http://localhost
+curl: (7) Failed to connect to localhost port 80: Connection refused
+
+--------------------------------------------------
+
+$ sudo systemctl start httpd
+
+$ curl http://localhost
+
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Systemd Lab Test Page</title>
+</head>
+<body>
+ <h1>Welcome to the Systemd Management Lab!</h1>
+ <p>This page is served by Apache, managed through systemd.</p>
+</body>
+</html>
+
+
+========================================
+Lab 30 Completed Successfully
+========================================
