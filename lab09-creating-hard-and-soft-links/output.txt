@@ -1,0 +1,124 @@
+==============================
+Lab 09 – Creating Hard and Soft Links
+Environment: Ubuntu 24.04.1 LTS
+User: toor
+Hostname: ip-172-31-10-233
+==============================
+
+$ cat /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+
+--------------------------------------------------
+
+$ mkdir link_lab && cd link_lab
+(No output)
+
+$ echo "This is the original file." > original.txt
+(No output)
+
+$ cat original.txt
+This is the original file.
+
+--------------------------------------------------
+
+$ ln original.txt hardlink.txt
+(No output)
+
+$ ls -li
+131084 -rw-r--r-- 2 toor toor 27 Feb 23 15:02 hardlink.txt
+131084 -rw-r--r-- 2 toor toor 27 Feb 23 15:02 original.txt
+
+--------------------------------------------------
+
+$ echo "Appended via hard link." >> hardlink.txt
+(No output)
+
+$ cat original.txt
+This is the original file.
+Appended via hard link.
+
+$ cat hardlink.txt
+This is the original file.
+Appended via hard link.
+
+--------------------------------------------------
+
+$ rm hardlink.txt
+(No output)
+
+$ cat original.txt
+This is the original file.
+Appended via hard link.
+
+--------------------------------------------------
+
+$ ln -s original.txt symlink.txt
+(No output)
+
+$ ls -l
+-rw-r--r-- 1 toor toor 52 Feb 23 15:04 original.txt
+lrwxrwxrwx 1 toor toor 12 Feb 23 15:05 symlink.txt -> original.txt
+
+--------------------------------------------------
+
+$ cat symlink.txt
+This is the original file.
+Appended via hard link.
+
+--------------------------------------------------
+
+$ rm original.txt
+(No output)
+
+$ cat symlink.txt
+cat: symlink.txt: No such file or directory
+
+--------------------------------------------------
+
+$ echo "New content." > original.txt
+(No output)
+
+$ cat symlink.txt
+New content.
+
+--------------------------------------------------
+
+$ rm symlink.txt
+(No output)
+
+--------------------------------------------------
+
+$ df -h /tmp
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           768M  1.5M  766M   1% /tmp
+
+--------------------------------------------------
+
+$ ln original.txt /tmp/hardlink_fail.txt
+ln: failed to create hard link '/tmp/hardlink_fail.txt' => 'original.txt': Invalid cross-device link
+
+--------------------------------------------------
+
+$ ln -s $(pwd)/original.txt /tmp/symlink_success.txt
+(No output)
+
+$ cat /tmp/symlink_success.txt
+New content.
+
+--------------------------------------------------
+
+Cleanup Commands Executed:
+$ rm original.txt
+$ rm /tmp/symlink_success.txt
+$ cd ..
+$ rm -r link_lab
+
+(No output)
+
+==============================
+Lab Completed Successfully
+Hard & Symbolic Link Behavior Verified
+==============================
