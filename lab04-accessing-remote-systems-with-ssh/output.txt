@@ -1,0 +1,128 @@
+============================================================
+Lab 04 – Accessing Remote Systems with SSH
+Environment: Ubuntu 24.04.1 LTS (EC2)
+Local Machine: toor@ip-172-31-10-91
+Remote Server: student@172.31.10.200
+============================================================
+
+------------------------------------------------------------
+Task 1 – Verify SSH Installation
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ ssh -V
+OpenSSH_9.6p1 Ubuntu-3ubuntu13, OpenSSL 3.0.13 30 Jan 2024
+
+toor@ip-172-31-10-91:~$ sudo apt update && sudo apt install openssh-client -y
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+openssh-client is already the newest version (1:9.6p1-3ubuntu13).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+
+------------------------------------------------------------
+Initial SSH Login (Password-Based)
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ ssh student@172.31.10.200
+
+The authenticity of host '172.31.10.200 (172.31.10.200)' can't be established.
+ED25519 key fingerprint is SHA256:AbCdEfGhIjKlMnOpQrStUvWxYz1234567890.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '172.31.10.200' (ED25519) to the list of known hosts.
+student@172.31.10.200's password:
+
+Welcome to Ubuntu 24.04.1 LTS (GNU/Linux 6.8.0-31-generic x86_64)
+
+student@ip-172-31-10-200:~$ sudo systemctl status ssh
+
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2026-02-23 09:01:12 UTC; 2h 14min ago
+
+student@ip-172-31-10-200:~$ exit
+logout
+Connection to 172.31.10.200 closed.
+
+------------------------------------------------------------
+Task 2 – SSH Key-Based Authentication
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ ssh-keygen -t ed25519 -C "your_email@example.com"
+
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/toor/.ssh/id_ed25519):
+Created directory '/home/toor/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/toor/.ssh/id_ed25519
+Your public key has been saved in /home/toor/.ssh/id_ed25519.pub
+The key fingerprint is:
+SHA256:ZxYvUtSrQpOnMlKjIhGfEdCbA123456789 your_email@example.com
+
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ ssh-copy-id -i ~/.ssh/id_ed25519.pub student@172.31.10.200
+
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/toor/.ssh/id_ed25519.pub"
+student@172.31.10.200's password:
+Number of key(s) added: 1
+
+Now try logging into the machine, with:
+   "ssh 'student@172.31.10.200'"
+and check to make sure that only the key(s) you wanted were added.
+
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ ssh student@172.31.10.200
+
+Welcome to Ubuntu 24.04.1 LTS
+student@ip-172-31-10-200:~$
+
+✔ Passwordless login successful.
+
+student@ip-172-31-10-200:~$ exit
+logout
+Connection to 172.31.10.200 closed.
+
+------------------------------------------------------------
+Task 3 – Secure File Transfer Using SCP
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ echo "This is a secure file transfer test." > localfile.txt
+
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ scp localfile.txt student@172.31.10.200:/home/student/
+
+localfile.txt                                  100%   38     8.1KB/s   00:00
+
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ ssh student@172.31.10.200
+
+student@ip-172-31-10-200:~$ ls
+localfile.txt
+
+student@ip-172-31-10-200:~$ exit
+
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ ssh student@172.31.10.200
+student@ip-172-31-10-200:~$ echo "Remote system file." > remotefile.txt
+student@ip-172-31-10-200:~$ exit
+
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ scp student@172.31.10.200:/home/student/remotefile.txt ~/
+
+remotefile.txt                                100%   19     5.2KB/s   00:00
+
+------------------------------------------------------------
+
+toor@ip-172-31-10-91:~$ cat remotefile.txt
+Remote system file.
+
+============================================================
+Lab 04 Completed Successfully
+Secure Remote Access & File Transfer Verified
+============================================================
