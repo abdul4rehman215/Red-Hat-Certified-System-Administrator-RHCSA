@@ -1,0 +1,170 @@
+========================================
+Task 1: Disk Discovery
+========================================
+
+$ lsblk
+NAME        MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+nvme0n1     259:0    0  32G  0 disk
+└─nvme0n1p1 259:1    0  32G  0 part /
+nvme1n1     259:2    0  40G  0 disk
+
+$ sudo fdisk -l
+
+Disk /dev/nvme0n1: 34.4 GB
+Device              Start      End  Sectors Size Type
+/dev/nvme0n1p1       2048 67108863 67106816  32G Linux
+
+Disk /dev/nvme1n1: 42.9 GB
+Disklabel type: dos
+Disk identifier: 0x1a2b3c4d
+
+$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p1   32G  4.1G   28G  13% /
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+
+
+========================================
+Alias Creation (/dev/sdb)
+========================================
+
+$ ls -l /dev/sdb
+ls: cannot access '/dev/sdb': No such file or directory
+
+$ sudo ln -s /dev/nvme1n1 /dev/sdb
+
+$ ls -l /dev/sdb
+lrwxrwxrwx 1 root root 10 Feb 23 18:41 /dev/sdb -> /dev/nvme1n1
+
+
+========================================
+Partition Creation
+========================================
+
+$ lsblk /dev/sdb
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sdb      0:0    0  40G  0 disk
+├─sdb1   0:0    0   2G  0 part
+├─sdb2   0:0    0   1G  0 part
+├─sdb3   0:0    0 36.8G 0 part
+└─sdb5   0:0    0 500M  0 part
+
+$ sudo fdisk -l /dev/sdb
+
+Device     Boot   Start     End Sectors Size Id Type
+/dev/sdb1          2048 4196351 4194304   2G 83 Linux
+/dev/sdb2       4196352 6293503 2097152   1G 83 Linux
+/dev/sdb3       6293504 83886079 77592576 37G  5 Extended
+/dev/sdb5       6295552 7319551 1024000 500M 83 Linux
+
+
+========================================
+Filesystem Creation
+========================================
+
+$ sudo blkid /dev/sdb1 /dev/sdb2 /dev/sdb5
+
+/dev/sdb1: UUID="1b6f4c1e-3a7a-4c19-b6c4-9d7c9f5bbd21" TYPE="ext4"
+/dev/sdb2: UUID="0b6a2b0a-0d51-4d2f-a9fd-7d07e8cb7f0c" TYPE="xfs"
+/dev/sdb5: UUID="7f6c2e58-9e7c-4a91-9f8c-36a6f88a4d10" TYPE="ext3"
+
+
+========================================
+Mounting Partitions
+========================================
+
+$ mount | grep sdb
+/dev/sdb1 on /mnt/data1 type ext4 (rw,relatime)
+/dev/sdb2 on /mnt/data2 type xfs (rw,relatime)
+/dev/sdb5 on /mnt/data3 type ext3 (rw,relatime)
+
+$ df -h | grep sdb
+/dev/sdb1  2.0G  6.0M  1.8G  1% /mnt/data1
+/dev/sdb2  1.0G   33M  992M  4% /mnt/data2
+/dev/sdb5  488M  2.3M  460M  1% /mnt/data3
+
+
+========================================
+Test Files Created
+========================================
+
+$ ls -la /mnt/data1
+lost+found
+test_ext4.txt
+
+$ ls -la /mnt/data2
+test_xfs.txt
+
+$ ls -la /mnt/data3
+lost+found
+test_ext3.txt
+
+
+========================================
+Unmount Verification
+========================================
+
+$ mount | grep sdb
+(no output)
+
+$ df -h | grep sdb
+(no output)
+
+
+========================================
+Mount by Label + UUID
+========================================
+
+$ mount | grep data
+/dev/sdb1 on /mnt/data1 type ext4 (rw,relatime)
+/dev/sdb2 on /mnt/data2 type xfs (rw,relatime)
+
+
+========================================
+/etc/fstab Entries
+========================================
+
+UUID=1b6f4c1e-3a7a-4c19-b6c4-9d7c9f5bbd21 /mnt/data1 ext4 defaults 0 2
+UUID=0b6a2b0a-0d51-4d2f-a9fd-7d07e8cb7f0c /mnt/data2 xfs defaults 0 2
+UUID=7f6c2e58-9e7c-4a91-9f8c-36a6f88a4d10 /mnt/data3 ext3 defaults 0 2
+
+$ sudo mount -a
+(no errors)
+
+$ df -h | grep sdb
+/dev/sdb1  2.0G  6.0M  1.8G  1% /mnt/data1
+/dev/sdb2  1.0G   33M  992M  4% /mnt/data2
+/dev/sdb5  488M  2.3M  460M  1% /mnt/data3
+
+
+========================================
+Filesystem Check
+========================================
+
+$ sudo fsck.ext4 /dev/sdb1
+/dev/sdb1: clean, 11/131072 files, 26342/524288 blocks
+
+$ sudo xfs_repair /dev/sdb2
+Phase 1 - find and verify superblock...
+Phase 7 - verify link counts...
+done
+
+
+========================================
+Partition View (parted)
+========================================
+
+Number  Start   End     Size    Type      File system
+ 1      1049kB  2149MB  2147MB  primary   ext4
+ 2      2149MB  3223MB  1074MB  primary   xfs
+ 3      3223MB  42.9GB  39.7GB  extended
+ 5      3224MB  3748MB  524MB   logical   ext3
+
+========================================
+Lab Cleanup Completed
+========================================
+Unmounted successfully.
+fstab restored.
+Mount points removed.
+
+LAB 28 COMPLETED SUCCESSFULLY
