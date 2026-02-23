@@ -1,0 +1,334 @@
+========================================
+Lab 21 – Introduction to Linux Essentials
+Execution Output Log
+========================================
+
+
+----------------------------------------
+System Verification
+----------------------------------------
+
+-bash-4.2$ cat /etc/os-release
+
+NAME="CentOS Linux"
+VERSION="7 (Core)"
+ID="centos"
+VERSION_ID="7"
+PRETTY_NAME="CentOS Linux 7 (Core)"
+
+
+----------------------------------------
+Working Directory Verification
+----------------------------------------
+
+-bash-4.2$ pwd
+
+/home/centos
+
+
+----------------------------------------
+Listing Directory Contents
+----------------------------------------
+
+-bash-4.2$ ls
+
+anaconda-ks.cfg
+
+
+-bash-4.2$ ls -l
+
+-rw-------. 1 root root 1456 Aug 18 10:22 anaconda-ks.cfg
+
+
+-bash-4.2$ ls -la
+
+total 28
+drwx------. 3 centos centos  128 Feb 23 10:15 .
+drwxr-xr-x. 3 root   root     20 Feb 23 10:10 ..
+-rw-------. 1 centos centos  181 Feb 23 10:11 .bash_history
+-rw-r--r--. 1 centos centos   18 Apr  1  2020 .bash_logout
+-rw-r--r--. 1 centos centos  193 Apr  1  2020 .bash_profile
+-rw-r--r--. 1 centos centos  231 Apr  1  2020 .bashrc
+
+
+-bash-4.2$ ls -lh
+
+total 4.0K
+-rw-------. 1 root root 1.5K Aug 18 10:22 anaconda-ks.cfg
+
+
+----------------------------------------
+Directory Navigation
+----------------------------------------
+
+-bash-4.2$ cd /
+
+-bash-4.2$ pwd
+
+/
+
+
+-bash-4.2$ ls
+
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+
+
+-bash-4.2$ cd ~
+
+-bash-4.2$ pwd
+
+/home/centos
+
+
+-bash-4.2$ cd ..
+
+-bash-4.2$ ls
+
+centos
+
+-bash-4.2$ pwd
+
+/home
+
+
+-bash-4.2$ cd
+
+-bash-4.2$ pwd
+
+/home/centos
+
+
+----------------------------------------
+Root Filesystem Exploration
+----------------------------------------
+
+-bash-4.2$ cd /
+
+-bash-4.2$ ls -l
+
+dr-xr-xr-x.   2 root root 4096 Feb 23 10:10 bin
+dr-xr-xr-x.   5 root root 4096 Feb 23 10:10 boot
+drwxr-xr-x.  19 root root 3020 Feb 23 10:15 dev
+drwxr-xr-x.  78 root root 4096 Feb 23 10:12 etc
+drwxr-xr-x.   3 root root   20 Feb 23 10:10 home
+
+
+-bash-4.2$ ls /bin | head -10
+
+bash
+cat
+chmod
+chown
+cp
+date
+echo
+grep
+kill
+ls
+
+
+-bash-4.2$ ls /etc | head -10
+
+adjtime
+aliases
+alternatives
+anacrontab
+audit
+bashrc
+cron.d
+cron.daily
+environment
+fstab
+
+
+-bash-4.2$ ls /home
+
+centos
+
+
+-bash-4.2$ ls /var
+
+account  cache  db  empty  games  lib  local  lock  log  mail  opt  run  spool  tmp
+
+
+-bash-4.2$ ls /usr
+
+bin  games  include  lib  lib64  libexec  local  sbin  share  src
+
+
+----------------------------------------
+System Locations
+----------------------------------------
+
+-bash-4.2$ ls /tmp
+
+systemd-private-xyz
+
+
+-bash-4.2$ ls /dev | head -5
+
+console
+core
+fd
+full
+null
+
+
+-bash-4.2$ ls /proc | head -5
+
+1
+10
+100
+101
+102
+
+
+----------------------------------------
+Working with Paths
+----------------------------------------
+
+-bash-4.2$ cd /usr/bin
+
+-bash-4.2$ pwd
+
+/usr/bin
+
+
+-bash-4.2$ ls | head -5
+
+ab
+ac
+addr2line
+alias
+apropos
+
+
+-bash-4.2$ cd ../share
+
+-bash-4.2$ pwd
+
+/usr/share
+
+
+-bash-4.2$ cd ../../home
+
+-bash-4.2$ pwd
+
+/home
+
+
+-bash-4.2$ cd
+
+-bash-4.2$ pwd
+
+/home/centos
+
+
+----------------------------------------
+Manual Pages & Documentation
+----------------------------------------
+
+-bash-4.2$ man cd
+
+No manual entry for cd
+
+
+-bash-4.2$ whatis ls
+
+ls (1) - list directory contents
+
+
+-bash-4.2$ whatis pwd
+
+pwd (1) - print name of current working directory
+
+
+-bash-4.2$ whatis cp
+
+cp (1) - copy files and directories
+
+
+-bash-4.2$ whatis mv
+
+mv (1) - move (rename) files
+
+
+-bash-4.2$ apropos file | head -10
+
+file (1) - determine file type
+stat (2) - get file status
+chmod (1) - change file mode bits
+
+
+-bash-4.2$ apropos directory | head -5
+
+chdir (2) - change working directory
+mkdir (1) - make directories
+rmdir (1) - remove empty directories
+
+
+-bash-4.2$ apropos text | head -5
+
+cat (1) - concatenate files and print on the standard output
+grep (1) - print lines matching a pattern
+less (1) - opposite of more
+
+
+----------------------------------------
+Practice Exercises
+----------------------------------------
+
+-bash-4.2$ cd /
+
+-bash-4.2$ pwd
+
+/
+
+
+-bash-4.2$ cd /usr/bin
+
+-bash-4.2$ ls | wc -l
+
+1023
+
+
+-bash-4.2$ cd
+
+-bash-4.2$ pwd
+
+/home/centos
+
+
+-bash-4.2$ whoami
+
+centos
+
+
+-bash-4.2$ hostname
+
+ip-172-31-12-48
+
+
+-bash-4.2$ date
+
+Sun Feb 23 11:42:16 UTC 2026
+
+
+-bash-4.2$ uptime
+
+11:42:20 up 2:13,  1 user,  load average: 0.00, 0.01, 0.05
+
+
+-bash-4.2$ file .bashrc
+
+.bashrc: ASCII text
+
+
+-bash-4.2$ file .bash_profile
+
+.bash_profile: ASCII text
+
+
+========================================
+Lab 21 Completed Successfully
+========================================
