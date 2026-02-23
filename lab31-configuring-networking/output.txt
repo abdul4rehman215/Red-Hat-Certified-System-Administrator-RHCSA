@@ -1,0 +1,226 @@
+============================================================
+Lab 31 – Configuring Networking
+Execution Output Log
+Environment: CentOS Stream 9
+User: centos
+============================================================
+
+
+==============================
+Task 1: Explore Current Network Configuration
+==============================
+
+$ nmcli connection show
+
+NAME                UUID                                  TYPE      DEVICE
+System eth0         5d1f2c8a-7e3a-4fb2-9f9a-9c7d8b2e18c1  ethernet  eth0
+lo                  2f2d9c5c-8f3c-41b8-8d54-8bbcc1b7a5df  loopback  lo
+
+
+$ nmcli device status
+
+DEVICE  TYPE      STATE      CONNECTION
+eth0    ethernet  connected  System eth0
+lo      loopback  unmanaged  --
+
+
+$ ip addr show
+
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc fq_codel state UP group default qlen 1000
+    link/ether 0a:6f:3c:9b:21:44 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.50/24 brd 192.168.1.255 scope global dynamic noprefixroute eth0
+       valid_lft 3490sec preferred_lft 3490sec
+    inet6 fe80::86f:3cff:fe9b:2144/64 scope link
+       valid_lft forever preferred_lft forever
+
+
+==============================
+Task 1: Create Static Connection Profile
+==============================
+
+$ sudo nmcli connection add ...
+
+Connection 'lab-static-connection' (a3f2b1d7-9a0e-4f1c-8e4b-bf6a9e1e7c02) successfully added.
+
+
+$ sudo nmcli connection up "lab-static-connection"
+
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/3)
+
+
+$ nmcli connection show --active
+
+NAME                  UUID                                  TYPE      DEVICE
+lab-static-connection a3f2b1d7-9a0e-4f1c-8e4b-bf6a9e1e7c02  ethernet  eth0
+lo                    2f2d9c5c-8f3c-41b8-8d54-8bbcc1b7a5df  loopback  lo
+
+
+$ ip addr show eth0
+
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc fq_codel state UP group default qlen 1000
+    link/ether 0a:6f:3c:9b:21:44 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.100/24 brd 192.168.1.255 scope global noprefixroute eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::86f:3cff:fe9b:2144/64 scope link
+       valid_lft forever preferred_lft forever
+
+
+==============================
+Task 1: Legacy ifconfig Method
+==============================
+
+$ sudo yum install net-tools -y
+
+Installed:
+  net-tools.x86_64 0:2.0-0.62.20160912git.el8
+
+Complete!
+
+
+$ ifconfig eth0
+
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 9001
+        inet 192.168.1.101  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::86f:3cff:fe9b:2144  prefixlen 64  scopeid 0x20<link>
+        ether 0a:6f:3c:9b:21:44  txqueuelen 1000  (Ethernet)
+        RX packets 2941  bytes 327904 (320.2 KiB)
+        TX packets 2105  bytes 285112 (278.4 KiB)
+
+
+$ route -n
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.1.1     0.0.0.0         UG    100    0        0 eth0
+192.168.1.0     0.0.0.0         255.255.255.0   U     100    0        0 eth0
+
+
+==============================
+Task 2: Hostname Configuration
+==============================
+
+$ hostnamectl status
+
+Static hostname: ip-192-168-1-50
+Operating System: CentOS Stream 9
+Kernel: Linux 5.14.0-427.el9.x86_64
+
+
+$ sudo hostnamectl set-hostname "lab-server-01"
+
+
+$ hostnamectl status
+
+Static hostname: lab-server-01
+
+
+$ cat /etc/hostname
+
+lab-server-01
+
+
+$ nslookup lab-server-01
+
+Server:         192.168.1.1
+Address:        192.168.1.1#53
+
+Name:   lab-server-01
+Address: 127.0.0.1
+
+
+==============================
+Task 3: Connectivity Testing
+==============================
+
+$ ping -c 4 192.168.1.1
+
+4 packets transmitted, 4 received, 0% packet loss
+
+
+$ ping -c 4 8.8.8.8
+
+4 packets transmitted, 4 received, 0% packet loss
+
+
+$ ping -c 4 google.com
+
+4 packets transmitted, 4 received, 0% packet loss
+
+
+==============================
+Traceroute Output
+==============================
+
+$ traceroute google.com
+
+ 1  192.168.1.1
+ 2  10.20.0.1
+ 3  10.20.8.5
+ 4  100.64.0.1
+ 5  72.14.209.198
+ 6  142.250.47.15
+ 7  142.250.190.46
+
+
+==============================
+DNS Testing
+==============================
+
+$ nslookup google.com
+
+Non-authoritative answer:
+Name:   google.com
+Address: 142.250.190.46
+
+
+$ dig google.com
+
+;; ANSWER SECTION:
+google.com.  300 IN A 142.250.190.46
+
+
+==============================
+HTTP & Port Testing
+==============================
+
+$ curl -I http://google.com
+
+HTTP/1.1 301 Moved Permanently
+
+
+$ ss -tuln
+
+tcp   LISTEN 0      128    0.0.0.0:22
+tcp   LISTEN 0      128    [::]:22
+
+
+==============================
+Script Execution
+==============================
+
+$ ./network_lab.sh
+
+=== Network Configuration Lab Script ===
+Connection 'lab-connection' successfully added.
+Connection successfully activated
+Setting hostname...
+Testing local gateway...
+2 packets transmitted, 2 received, 0% packet loss
+Testing external DNS...
+2 packets transmitted, 2 received, 0% packet loss
+Testing domain resolution...
+Name:   google.com
+Address: 142.250.190.46
+=== Lab Configuration Complete ===
+
+
+============================================================
+Lab 31 Completed Successfully
+============================================================
