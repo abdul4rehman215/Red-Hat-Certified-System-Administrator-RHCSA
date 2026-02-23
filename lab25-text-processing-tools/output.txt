@@ -1,0 +1,292 @@
+total 12
+-rw-rw-r--. 1 centos centos 235 Feb 23 15:05 config.conf
+-rw-rw-r--. 1 centos centos 551 Feb 23 15:05 system.log
+-rw-rw-r--. 1 centos centos 247 Feb 23 15:05 users.txt
+
+Jan 15 10:30:15 server1 sshd[1234]: Accepted password for admin from 192.168.1.100
+Jan 15 10:32:45 server1 sshd[1235]: Failed password for root from 192.168.1.200
+Jan 15 10:34:55 server1 sshd[1236]: Accepted password for user1 from 192.168.1.150
+Jan 15 10:37:45 server1 sshd[1237]: Failed password for admin from 192.168.1.200
+
+Jan 15 10:32:45 server1 sshd[1235]: Failed password for root from 192.168.1.200
+Jan 15 10:37:45 server1 sshd[1237]: Failed password for admin from 192.168.1.200
+
+3
+
+1:Jan 15 10:30:15 server1 sshd[1234]: Accepted password for admin from 192.168.1.100
+8:Jan 15 10:37:45 server1 sshd[1237]: Failed password for admin from 192.168.1.200
+
+Jan 15 10:30:15 server1 sshd[1234]: Accepted password for admin from 192.168.1.100
+Jan 15 10:32:45 server1 sshd[1235]: Failed password for root from 192.168.1.200
+Jan 15 10:34:55 server1 sshd[1236]: Accepted password for user1 from 192.168.1.150
+Jan 15 10:35:20 server1 kernel: Out of memory: Kill process 9876
+Jan 15 10:37:45 server1 sshd[1237]: Failed password for admin from 192.168.1.200
+
+./system.log:Jan 15 10:32:45 server1 sshd[1235]: Failed password for root from 192.168.1.200
+./system.log:Jan 15 10:37:45 server1 sshd[1237]: Failed password for admin from 192.168.1.200
+./logs/system.log:Jan 15 10:32:45 server1 sshd[1235]: Failed password for root from 192.168.1.200
+./logs/system.log:Jan 15 10:37:45 server1 sshd[1237]: Failed password for admin from 192.168.1.200
+
+admin:x:1003:1003:System Admin:/home/admin:/bin/bash
+
+Jan 15 10:30:15 server1 sshd[1234]: Accepted password for admin from 192.168.1.100
+Jan 15 10:31:22 server1 httpd[5678]: GET /index.html 200 OK
+Jan 15 10:32:45 server1 sshd[1235]: Failed password for root from 192.168.1.200
+Jan 15 10:33:10 server1 httpd[5679]: POST /login.php 404 Not Found
+Jan 15 10:34:55 server1 sshd[1236]: Accepted password for user1 from 192.168.1.150
+Jan 15 10:36:30 server1 httpd[5680]: GET /admin.php 403 Forbidden
+Jan 15 10:37:45 server1 sshd[1237]: Failed password for admin from 192.168.1.200
+
+Jan 15 10:30:15 server1 sshd[1234]: Accepted password for admin from 192.168.1.100
+Jan 15 10:31:22 server1 httpd[5678]: GET /index.html 200 OK
+Jan 15 10:32:45 server1 sshd[1235]: Failed password for root from 192.168.1.200
+Jan 15 10:33:10 server1 httpd[5679]: POST /login.php 404 Not Found
+Jan 15 10:34:55 server1 sshd[1236]: Accepted password for user1 from 192.168.1.150
+Jan 15 10:35:20 server1 kernel: Out of memory: Kill process 9876
+
+Jan 15 10:30:15 server1 sshd[1234]: Accepted password for admin from 192.168.1.100
+Jan 15 10:32:45 server1 sshd[1235]: Failed password for root from 192.168.1.200
+Jan 15 10:34:55 server1 sshd[1236]: Accepted password for user1 from 192.168.1.150
+Jan 15 10:35:20 server1 kernel: Out of memory: Kill process 9876
+Jan 15 10:37:45 server1 sshd[1237]: Failed password for admin from 192.168.1.200
+
+john:x:1001:1001:John Smith:/home/john:/bin/bash
+mary:x:1002:1002:Mary Johnson:/home/mary:/bin/bash
+admin:x:1003:1003:System Admin:/home/admin:/bin/bash
+root:x:0:0:Root User:/root:/bin/bash
+
+Port 80
+Port 443
+MaxClients 150
+DBPort 3306
+DBPassword secret123
+
+# Web Server Configuration
+ServerName example.com
+DocumentRoot /var/www/html
+Port 80
+Port 443
+MaxClients 150
+# Database Configuration
+DBHost localhost
+DBPort 3306
+DBUser webapp
+DBPassword secret123
+# Security Settings
+AllowOverride None
+Options Indexes
+
+john:x:1001:1001:John Smith:/home/john:/bin/bash
+admin:x:1003:1003:System Admin:/home/admin:/bin/bash
+guest:x:1004:1004:Guest User:/home/guest:/bin/false
+root:x:0:0:Root User:/root:/bin/bash
+
+john:x:1001:1001:John Smith:/home/john:/bin/bash
+mary:x:1002:1002:Mary Johnson:/home/mary:/bin/bash
+administrator:x:1003:1003:System Admin:/home/admin:/bin/bash
+guest:x:1004:1004:Guest User:/home/guest:/bin/false
+root:x:0:0:Root User:/root:/bin/bash
+
+john|x|1001|1001|John Smith|/home/john|/bin/bash
+mary|x|1002|1002|Mary Johnson|/home/mary|/bin/bash
+admin|x|1003|1003|System Admin|/home/admin|/bin/bash
+guest|x|1004|1004|Guest User|/home/guest|/bin/false
+root|x|0|0|Root User|/root|/bin/bash
+
+Port 8080
+Port 443
+DBPort 3306
+
+# Web Server Configuration
+ServerName example.com
+DocumentRoot /var/www/html
+Port 8080
+Port 443
+MaxClients 150
+# Database Configuration
+DBHost 127.0.0.1
+DBPort 3306
+DBUser webapp
+DBPassword newpassword
+# Security Settings
+AllowOverride None
+Options Indexes
+
+ServerName example.com
+ServerAlias www.example.com
+# Document root configuration
+DocumentRoot /var/www/html
+Port 8080
+Port 443
+MaxClients 200
+DBHost 127.0.0.1
+DBPort 3306
+DBUser webapp
+DBPassword newpassword
+AllowOverride None
+Options Indexes
+
+John Smith,  Main St, New York, New York 
+Mary Johnson,  Oak Ave, Los Angeles, California 
+Bob Wilson,  Pine Rd, Chicago, Illinois 
+Alice Brown,  Elm St, Houston, Texas 
+
+John Smith
+Mary Johnson
+Bob Wilson
+Alice Brown
+
+john John Smith
+mary Mary Johnson
+admin System Admin
+guest Guest User
+root Root User
+
+User: john, Home: /home/john
+User: mary, Home: /home/mary
+User: admin, Home: /home/admin
+User: guest, Home: /home/guest
+User: root, Home: /root
+
+john
+mary
+admin
+guest
+
+7 john:x:1001:1001:John Smith:/home/john:/bin/bash
+7 mary:x:1002:1002:Mary Johnson:/home/mary:/bin/bash
+7 admin:x:1003:1003:System Admin:/home/admin:/bin/bash
+7 guest:x:1004:1004:Guest User:/home/guest:/bin/false
+7 root:x:0:0:Root User:/root:/bin/bash
+
+john:x:1001:1001:John Smith:/home/john:/bin/bash
+mary:x:1002:1002:Mary Johnson:/home/mary:/bin/bash
+admin:x:1003:1003:System Admin:/home/admin:/bin/bash
+root:x:0:0:Root User:/root:/bin/bash
+
+john John Smith
+mary Mary Johnson
+admin System Admin
+root Root User
+
+=== User Report ===
+john John Smith
+mary Mary Johnson
+admin System Admin
+guest Guest User
+root Root User
+=== End Report ===
+
+Bash users: 4
+
+Line 1: john has 7 fields
+Line 2: mary has 7 fields
+Line 3: admin has 7 fields
+Line 4: guest has 7 fields
+Line 5: root has 7 fields
+
+john 4
+mary 4
+admin 5
+guest 5
+root 4
+
+John Smith
+Mary Johns
+System Adm
+Guest User
+Root User
+
+10:30:15 server1 Accepted
+10:31:22 server1 GET
+10:32:45 server1 Failed
+10:33:10 server1 POST
+10:34:55 server1 Accepted
+10:35:20 server1 Out
+10:36:30 server1 GET
+10:37:45 server1 Failed
+
+=== Log Analysis Report ===
+SSH Successful logins: 2
+SSH Failed logins: 2
+HTTP Requests: 3
+=== End Report ===
+
+=== User Summary ===
+Regular user: john (John Smith)
+Regular user: mary (Mary Johnson)
+Regular user: admin (System Admin)
+System users: 1
+Regular bash users: 3
+
+      1 root 192.168.1.200
+      1 admin 192.168.1.200
+
+john John Smith /home/john
+mary Mary Johnson /home/mary
+admin System Admin /home/admin
+root Root User /root
+
+ServerName: example.com
+ServerAlias: www.example.com
+DocumentRoot: /var/www/html
+Port: 8080
+Port: 443
+MaxClients: 200
+DBHost: 127.0.0.1
+DBPort: 3306
+DBUser: webapp
+DBPassword: newpassword
+AllowOverride: None
+Options: Indexes
+
+=== System Log Analysis ===
+
+SSH Login Analysis:
+Successful logins:
+ 1 admin 192.168.1.100
+ 1 user1 192.168.1.150
+
+Failed login attempts:
+ 1 admin 192.168.1.200
+ 1 root 192.168.1.200
+
+=== HTTP Request Analysis ===
+ 1 GET /admin.php
+ 1 GET /index.html
+ 1 POST /login.php
+
+=== User Account Summary ===
+Regular users with bash access:
+ john (John Smith)
+ mary (Mary Johnson)
+ admin (System Admin)
+
+System accounts:
+ Total system accounts: 1
+
+Top IP addresses:
+      2 192.168.1.200
+      2 192.168.1.100
+      1 192.168.1.150
+
+
+HTTP status codes:
+      2 200
+      1 403
+      1 404
+
+
+Most requested pages:
+      2 /login.php
+      2 /index.html
+      1 /admin.php
+
+
+Security Analysis:
+403 Forbidden attempts:
+192.168.1.100 /admin.php
+
+
+404 Not Found errors:
+192.168.1.200 /login.php
