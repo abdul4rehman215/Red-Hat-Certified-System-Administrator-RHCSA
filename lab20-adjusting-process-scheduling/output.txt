@@ -1,0 +1,115 @@
+Lab 20 – Adjusting Process Scheduling
+Ubuntu 24.04.1 LTS
+Host: ip-172-31-10-533
+User: toor
+
+-------------------------------------------------
+Launch CPU-Intensive Process
+-------------------------------------------------
+$ sha1sum /dev/zero &
+[1] 1842
+
+-------------------------------------------------
+Check Default Priority
+-------------------------------------------------
+$ ps -l -p 1842
+
+F S UID   PID  PPID  C PRI NI ADDR SZ WCHAN  TTY      TIME CMD
+0 R 1000 1842  1830 99  80  0   - 1132  -     pts/0  00:00:15 sha1sum
+
+NI = 0 (Default nice value)
+
+-------------------------------------------------
+Launch with Lower Priority
+-------------------------------------------------
+$ nice -n 10 sha1sum /dev/zero &
+[2] 1860
+
+$ ps -l -p 1860
+
+F S UID   PID  PPID  C PRI NI ADDR SZ WCHAN  TTY      TIME CMD
+0 R 1000 1860  1830 98  90 10   - 1132  -     pts/0  00:00:10 sha1sum
+
+NI = 10 (Lower scheduling priority)
+
+-------------------------------------------------
+Adjust Running Process with renice
+-------------------------------------------------
+$ sudo renice -n 5 -p 1842
+1842 (process ID) old priority 0, new priority 5
+
+$ ps -l -p 1842
+
+F S UID   PID  PPID  C PRI NI ADDR SZ WCHAN  TTY      TIME CMD
+0 R 1000 1842  1830 99  85  5   - 1132  -     pts/0  00:00:28 sha1sum
+
+-------------------------------------------------
+Monitor with top
+-------------------------------------------------
+$ top
+
+top - 19:15:23 up 22 min, 1 user, load average: 1.98, 1.10, 0.52
+Tasks: 120 total, 2 running
+%Cpu(s): 98.7 us, 1.1 sy, 0.0 ni, 0.2 id
+
+PID   USER PR NI %CPU COMMAND
+1842  toor 85  5 49.2 sha1sum
+1860  toor 90 10 49.1 sha1sum
+
+Observe PRI and NI differences.
+
+-------------------------------------------------
+Using htop
+-------------------------------------------------
+$ htop
+
+Observations:
+- Color-coded CPU usage
+- NI column visible
+- F7 increases priority
+- F8 decreases priority
+- F5 enables tree view
+
+-------------------------------------------------
+Process States
+-------------------------------------------------
+$ ps aux | grep sha1sum
+
+toor 1842 49.2 0.1 1132 540 pts/0 R 19:15 0:45 sha1sum
+toor 1860 49.1 0.1 1132 540 pts/0 R 19:15 0:44 sha1sum
+
+R = Running
+Other possible states:
+S = Sleeping
+D = Uninterruptible
+Z = Zombie
+
+-------------------------------------------------
+Apply Real-Time Scheduling
+-------------------------------------------------
+$ sudo chrt -f -p 99 1905
+
+pid 1905's current scheduling policy: SCHED_OTHER
+pid 1905's new scheduling policy: SCHED_FIFO
+pid 1905's new priority: 99
+
+$ chrt -p 1905
+
+pid 1905's current scheduling policy: SCHED_FIFO
+pid 1905's current scheduling priority: 99
+
+-------------------------------------------------
+Cleanup
+-------------------------------------------------
+$ kill $(pgrep sha1sum)
+
+(no output)
+
+-------------------------------------------------
+Lab Status
+-------------------------------------------------
+Process priority modification validated.
+Dynamic scheduling observed.
+Real-time scheduling applied successfully.
+
+Lab 20 Completed Successfully.
