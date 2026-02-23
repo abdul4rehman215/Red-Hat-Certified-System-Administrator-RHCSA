@@ -1,0 +1,99 @@
+============================================================
+Lab 03 – Using grep and Regular Expressions
+Execution Output Log
+Environment: Ubuntu 24.04.1 LTS
+User: toor
+============================================================
+
+
+------------------------------------------------------------
+Task 1 – Create Sample File
+------------------------------------------------------------
+
+toor@ip-172-31-10-244:~$ echo -e "apple\nbanana\ncherry\ndate\nelderberry\nfig\ngrape" > sample.txt
+(No terminal output — file created)
+
+toor@ip-172-31-10-244:~$ cat sample.txt
+apple
+banana
+cherry
+date
+elderberry
+fig
+grape
+
+
+------------------------------------------------------------
+Task 1 – Basic grep Usage
+------------------------------------------------------------
+
+toor@ip-172-31-10-244:~$ grep "banana" sample.txt
+banana
+
+toor@ip-172-31-10-244:~$ grep -i "Apple" sample.txt
+apple
+
+toor@ip-172-31-10-244:~$ grep -c "a" sample.txt
+4
+
+
+------------------------------------------------------------
+Task 2 – Regular Expressions
+------------------------------------------------------------
+
+toor@ip-172-31-10-244:~$ grep "^a" sample.txt
+apple
+
+toor@ip-172-31-10-244:~$ grep "e$" sample.txt
+apple
+date
+grape
+
+toor@ip-172-31-10-244:~$ grep "[aeiou]p" sample.txt
+apple
+grape
+
+toor@ip-172-31-10-244:~$ grep -E "[aeiou]{2,}" sample.txt
+banana
+elderberry
+
+
+------------------------------------------------------------
+Task 3 – Searching Log Files
+------------------------------------------------------------
+
+toor@ip-172-31-10-244:~$ sudo cp /var/log/syslog /tmp/syslog_sample
+(No output — copy successful)
+
+toor@ip-172-31-10-244:~$ grep -i "error" /tmp/syslog_sample
+
+Feb 23 09:51:14 ip-172-31-10-244 kernel: [  120.442311] audit: type=1400 audit(1708672274.123:87): apparmor="DENIED" operation="open" profile="snap.snapd" error=-13
+Feb 23 10:02:33 ip-172-31-10-244 systemd[1]: Failed to start example.service: Unit entered failed state.
+Feb 23 10:02:33 ip-172-31-10-244 systemd[1]: example.service: Failed with result 'exit-code'.
+
+toor@ip-172-31-10-244:~$ grep -E "^[A-Za-z]{3} [0-9]{2}" /tmp/syslog_sample
+
+Feb 23 09:48:01 ip-172-31-10-244 CRON[1123]: (root) CMD (run-parts /etc/cron.hourly)
+Feb 23 09:51:14 ip-172-31-10-244 kernel: [  120.442311] audit: type=1400 audit(1708672274.123:87): apparmor="DENIED"
+Feb 23 10:02:33 ip-172-31-10-244 systemd[1]: Starting Cleanup of Temporary Directories...
+
+
+------------------------------------------------------------
+Help and Documentation
+------------------------------------------------------------
+
+toor@ip-172-31-10-244:~$ grep --help
+Usage: grep [OPTION]... PATTERNS [FILE]...
+Search for PATTERNS in each FILE.
+Example: grep -i 'hello world' menu.h main.c
+(Help output truncated for brevity in terminal display)
+
+toor@ip-172-31-10-244:~$ man grep
+GREP(1)                         User Commands                         GREP(1)
+NAME
+       grep, egrep, fgrep - print lines matching a pattern
+(Manual page content displayed via pager)
+
+============================================================
+End of Lab 03 Output
+============================================================
