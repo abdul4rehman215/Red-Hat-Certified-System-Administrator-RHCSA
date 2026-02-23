@@ -1,0 +1,80 @@
+#!/bin/bash
+# Lab 09 – Creating Hard and Soft Links
+# Environment: Ubuntu 24.04.1 LTS
+# Hostname: ip-172-31-10-233
+# User: toor
+# Purpose: Complete command execution log for hard & symbolic link operations
+
+# Verify OS
+cat /etc/os-release
+
+# Create working directory
+mkdir link_lab
+cd link_lab
+
+# Create original file
+echo "This is the original file." > original.txt
+
+# Verify file content
+cat original.txt
+
+# Create hard link
+ln original.txt hardlink.txt
+
+# Verify inode numbers
+ls -li
+
+# Append data via hard link
+echo "Appended via hard link." >> hardlink.txt
+
+# Verify content in both files
+cat original.txt
+cat hardlink.txt
+
+# Delete hard link
+rm hardlink.txt
+
+# Verify original file remains
+cat original.txt
+
+# Create symbolic link
+ln -s original.txt symlink.txt
+
+# Verify symbolic link
+ls -l
+
+# Access file via symbolic link
+cat symlink.txt
+
+# Delete original file
+rm original.txt
+
+# Attempt to access broken symlink
+cat symlink.txt
+
+# Recreate original file
+echo "New content." > original.txt
+
+# Verify symbolic link works again
+cat symlink.txt
+
+# Remove symbolic link
+rm symlink.txt
+
+# Check filesystem for /tmp
+df -h /tmp
+
+# Attempt hard link across filesystems
+ln original.txt /tmp/hardlink_fail.txt
+
+# Create symbolic link across filesystems
+ln -s $(pwd)/original.txt /tmp/symlink_success.txt
+
+# Verify cross-filesystem symlink
+cat /tmp/symlink_success.txt
+
+# Cleanup
+rm original.txt
+rm /tmp/symlink_success.txt
+cd ..
+rm -r link_lab
