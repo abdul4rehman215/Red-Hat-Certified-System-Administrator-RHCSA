@@ -1,11 +1,5 @@
 # 🔥 Lab 32: Managing Firewall with firewalld (RHCSA)
 
-**Environment:** CentOS/RHEL 8/9 (Cloud Lab Environment)  
-**User:** `centos` (sudo access)  
-**Shell Prompt:** `-bash-4.2$`
-
----
-
 ## 🎯 Objectives
 
 By the end of this lab, I was able to:
@@ -38,6 +32,10 @@ This lab was performed on a cloud-hosted CentOS/RHEL 8/9 system with:
 - Sudo privileges for the `centos` user
 - Network connectivity for service testing
 - Standard tools (and additional utilities installed during lab)
+
+**Environment:** CentOS/RHEL 8/9 (Cloud Lab Environment)  
+**User:** `centos` (sudo access)  
+**Shell Prompt:** `-bash-4.2$`
 
 ---
 
