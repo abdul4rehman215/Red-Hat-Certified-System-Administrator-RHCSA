@@ -1,0 +1,173 @@
+============================================================
+Lab 02 – Using Input-Output Redirection
+Execution Output Log
+Environment: Ubuntu 24.04.1 LTS
+User: toor
+============================================================
+
+
+------------------------------------------------------------
+Environment Verification
+------------------------------------------------------------
+
+toor@ip-172-31-10-219:~$ uname -a
+Linux ip-172-31-10-219 6.8.0-31-generic #31-Ubuntu SMP PREEMPT_DYNAMIC x86_64 GNU/Linux
+
+toor@ip-172-31-10-219:~$ podman --version
+podman version 4.9.3
+
+
+------------------------------------------------------------
+Task 1 – Output Redirection
+------------------------------------------------------------
+
+toor@ip-172-31-10-219:~$ echo "Hello, Red Hat OpenShift!" > greeting.txt
+(No terminal output — redirected to file)
+
+toor@ip-172-31-10-219:~$ cat greeting.txt
+Hello, Red Hat OpenShift!
+
+toor@ip-172-31-10-219:~$ echo "New content replaces old" > greeting.txt
+
+toor@ip-172-31-10-219:~$ cat greeting.txt
+New content replaces old
+
+toor@ip-172-31-10-219:~$ echo "Additional line" >> greeting.txt
+
+toor@ip-172-31-10-219:~$ cat greeting.txt
+New content replaces old
+Additional line
+
+toor@ip-172-31-10-219:~$ echo "Line 3" >> greeting.txt
+toor@ip-172-31-10-219:~$ echo "Line 4" >> greeting.txt
+
+toor@ip-172-31-10-219:~$ cat greeting.txt
+New content replaces old
+Additional line
+Line 3
+Line 4
+
+
+------------------------------------------------------------
+Task 2 – Using Pipes
+------------------------------------------------------------
+
+toor@ip-172-31-10-219:~$ ls -l | grep "greeting"
+-rw-r--r-- 1 toor toor 63 Feb 23 10:05 greeting.txt
+
+toor@ip-172-31-10-219:~$ cat greeting.txt | wc -l
+4
+
+toor@ip-172-31-10-219:~$ ps aux | grep podman | wc -l
+2
+
+toor@ip-172-31-10-219:~$ cat greeting.txt | sort
+Additional line
+Line 3
+Line 4
+New content replaces old
+
+toor@ip-172-31-10-219:~$ cat greeting.txt | sort > sorted_greeting.txt
+
+toor@ip-172-31-10-219:~$ cat sorted_greeting.txt
+Additional line
+Line 3
+Line 4
+New content replaces old
+
+toor@ip-172-31-10-219:~$ podman images | grep -v "<none>"
+REPOSITORY    TAG       IMAGE ID      CREATED        SIZE
+alpine        latest    7d0a8e7e6d1b  3 weeks ago    7.8 MB
+
+
+------------------------------------------------------------
+Task 3 – Error Redirection
+------------------------------------------------------------
+
+toor@ip-172-31-10-219:~$ ls /nonexistent 2> error.log
+(No terminal output — error redirected)
+
+toor@ip-172-31-10-219:~$ cat error.log
+ls: cannot access '/nonexistent': No such file or directory
+
+toor@ip-172-31-10-219:~$ ls /nonexistent /etc/passwd > output.log 2> error.log
+
+toor@ip-172-31-10-219:~$ cat output.log
+/etc/passwd
+
+toor@ip-172-31-10-219:~$ cat error.log
+ls: cannot access '/nonexistent': No such file or directory
+
+toor@ip-172-31-10-219:~$ ls /nonexistent /etc/passwd &> combined.log
+
+toor@ip-172-31-10-219:~$ cat combined.log
+ls: cannot access '/nonexistent': No such file or directory
+/etc/passwd
+
+toor@ip-172-31-10-219:~$ ls /nonexistent 2> /dev/null
+(No terminal output — error discarded)
+
+toor@ip-172-31-10-219:~$ podman run --name testcontainer alpine /bin/false 2> container_error.log
+
+toor@ip-172-31-10-219:~$ cat container_error.log
+Error: container testcontainer exited with code 1
+
+
+------------------------------------------------------------
+Task 4 – Combined Operations
+------------------------------------------------------------
+
+toor@ip-172-31-10-219:~$ (ls /etc/passwd /nonexistent | wc -l > success.log) 2> fail.log
+
+toor@ip-172-31-10-219:~$ cat success.log
+1
+
+toor@ip-172-31-10-219:~$ cat fail.log
+ls: cannot access '/nonexistent': No such file or directory
+
+toor@ip-172-31-10-219:~$ {
+> echo "=== System Report ==="
+> date
+> echo "=== Memory ==="
+> free -h
+> echo "=== Disk Usage ==="
+> df -h
+> } > system_report.txt 2> system_errors.log
+
+toor@ip-172-31-10-219:~$ cat system_report.txt
+=== System Report ===
+Sun Feb 23 10:18:42 UTC 2026
+=== Memory ===
+               total        used        free      shared  buff/cache   available
+Mem:           3.8Gi       1.1Gi       1.9Gi        12Mi       820Mi       2.4Gi
+Swap:             0B          0B          0B
+=== Disk Usage ===
+Filesystem       Size  Used Avail Use% Mounted on
+/dev/root         30G   11G   20G  35% /
+tmpfs            1.9G     0  1.9G   0% /dev/shm
+
+toor@ip-172-31-10-219:~$ {
+> echo "=== Container Images ==="
+> podman images
+> echo "=== Running Containers ==="
+> podman ps
+> } > container_report.txt 2> container_errors.log
+
+toor@ip-172-31-10-219:~$ cat container_report.txt
+=== Container Images ===
+REPOSITORY    TAG       IMAGE ID      CREATED        SIZE
+alpine        latest    7d0a8e7e6d1b  3 weeks ago    7.8 MB
+=== Running Containers ===
+CONTAINER ID  IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+toor@ip-172-31-10-219:~$ (echo "Lab Verification"; ls /etc/passwd | wc -l; podman images 2>/dev/null | wc -l) > verification.txt
+
+toor@ip-172-31-10-219:~$ cat verification.txt
+Lab Verification
+1
+2
+
+
+============================================================
+End of Lab 02 Output
+============================================================
