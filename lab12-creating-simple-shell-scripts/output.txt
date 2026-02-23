@@ -1,0 +1,29 @@
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+
+Hello, World!
+
+Current date: Sun Feb 23 16:42:11 UTC 2026
+User: toor
+Current directory: /home/toor/shell_scripts
+
+Name: OpenShift Learner, Age: 25
+
+Running as toor.
+
+Number: 1
+Number: 2
+Number: 3
+Number: 4
+Number: 5
+
++ echo 'Hello, World!'
+Hello, World!
+
+-rwxr-xr-x 1 toor toor  32 Feb 23 16:35 hello_world.sh
+-rwxr-xr-x 1 toor toor 118 Feb 23 16:37 system_info.sh
+-rwxr-xr-x 1 toor toor  89 Feb 23 16:38 variables.sh
+-rwxr-xr-x 1 toor toor 132 Feb 23 16:39 check_user.sh
+-rwxr-xr-x 1 toor toor  74 Feb 23 16:40 loop.sh
