@@ -1,0 +1,236 @@
+================================
+Task 1: Check Package Manager
+================================
+
+$ which dnf
+/usr/bin/dnf
+
+$ which yum
+/usr/bin/yum
+
+$ cat /etc/redhat-release
+Rocky Linux release 9.3 (Blue Onyx)
+
+================================
+Task 1.3: Update Repository Info
+================================
+
+$ sudo dnf update -y
+Last metadata expiration check: 0:05:22 ago.
+Dependencies resolved.
+Nothing to do.
+Complete!
+
+$ sudo dnf makecache
+Metadata cache created.
+
+================================
+Task 1.4: Search for Packages
+================================
+
+$ sudo dnf search wget
+wget.x86_64 : A utility for retrieving files using the HTTP or FTP protocols
+
+$ sudo dnf info wget
+Name         : wget
+Version      : 1.21.1
+Release      : 7.el9
+Architecture : x86_64
+Size         : 794 k
+Summary      : A utility for retrieving files using HTTP, HTTPS, and FTP
+
+================================
+Task 1.5: Install Single Packages
+================================
+
+$ sudo dnf install wget nano tree -y
+Installed:
+  wget-1.21.1-7.el9.x86_64
+  nano-5.6.1-5.el9.x86_64
+  tree-1.8.0-10.el9.x86_64
+
+Complete!
+
+$ which wget
+/usr/bin/wget
+
+$ which nano
+/usr/bin/nano
+
+$ which tree
+/usr/bin/tree
+
+================================
+Task 1.6: Install Multiple Packages
+================================
+
+$ sudo dnf install htop curl unzip -y
+Installed:
+  htop.x86_64
+  curl.x86_64
+  unzip.x86_64
+
+Complete!
+
+================================
+Task 1.7: Install Package Groups
+================================
+
+$ sudo dnf group list
+Available Environment Groups:
+   Server with GUI
+   Minimal Install
+
+Available Groups:
+   Development Tools
+   System Tools
+
+$ sudo dnf group install "Development Tools" -y
+Installed group: Development Tools
+Complete!
+
+================================
+Task 2.1: Query Using dnf
+================================
+
+$ sudo dnf list installed | head -10
+Installed Packages
+acl.x86_64
+audit.x86_64
+bash.x86_64
+curl.x86_64
+dnf.noarch
+glibc.x86_64
+nano.x86_64
+wget.x86_64
+
+$ sudo dnf list installed | grep wget
+wget.x86_64 1.21.1-7.el9 @baseos
+
+================================
+Task 2.2: Query Using rpm
+================================
+
+$ rpm -q wget
+wget-1.21.1-7.el9.x86_64
+
+$ rpm -qi wget
+Name        : wget
+Version     : 1.21.1
+Release     : 7.el9
+Architecture: x86_64
+Summary     : Utility for retrieving files
+
+$ rpm -ql wget
+/usr/bin/wget
+/usr/share/doc/wget
+/usr/share/man/man1/wget.1.gz
+
+$ rpm -qf /usr/bin/wget
+wget-1.21.1-7.el9.x86_64
+
+================================
+Task 2.4: Package Integrity
+================================
+
+$ rpm -V wget
+(no output)
+
+$ rpm -Va | head -5
+S.5....T.  c /etc/some-config-file
+.......T.    /usr/lib/some-binary
+.M.......    /usr/bin/some-command
+
+================================
+Task 3.1: Check Updates
+================================
+
+$ sudo dnf check-update
+Last metadata expiration check: 0:02:10 ago.
+No packages marked for update.
+
+================================
+Task 3.2: Update All
+================================
+
+$ sudo dnf update -y
+Nothing to do.
+Complete!
+
+================================
+Task 3.3: Remove Package
+================================
+
+$ sudo dnf remove tree -y
+Removed:
+  tree.x86_64
+
+Complete!
+
+$ which tree
+tree: command not found
+
+================================
+Clean Cache
+================================
+
+$ sudo dnf clean all
+Cleaning repos: baseos appstream
+Complete!
+
+================================
+Practical Scenario: Install Web Stack
+================================
+
+$ sudo dnf install httpd php php-mysqlnd mariadb-server -y
+Installed:
+  httpd.x86_64
+  php.x86_64
+  php-mysqlnd.x86_64
+  mariadb-server.x86_64
+
+Complete!
+
+$ rpm -q httpd php mariadb-server
+httpd-2.4.57-5.el9.x86_64
+php-8.1.20-1.el9.x86_64
+mariadb-server-10.5.22-1.el9.x86_64
+
+$ sudo dnf list installed | grep -E "(httpd|php|mariadb)"
+httpd.x86_64
+php.x86_64
+mariadb-server.x86_64
+
+$ rpm -qc httpd
+/etc/httpd/conf/httpd.conf
+/etc/httpd/conf.modules.d/00-base.conf
+
+================================
+Maintenance
+================================
+
+$ sudo dnf autoremove -y
+Nothing to do.
+Complete!
+
+$ sudo dnf remove php-mysqlnd -y
+Removed:
+  php-mysqlnd.x86_64
+
+Complete!
+
+$ rpm -q php-mysqlnd
+package php-mysqlnd is not installed
+
+================================
+Troubleshooting Commands
+================================
+
+$ sudo dnf install package-name --skip-broken
+
+$ sudo rpm --rebuilddb
+
+$ sudo dnf repolist
+repo id       repo name
+baseos        Rocky Linux 9 - BaseOS
+appstream     Rocky Linux 9 - AppStream
