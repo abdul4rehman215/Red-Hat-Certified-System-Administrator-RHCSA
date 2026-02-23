@@ -1,0 +1,138 @@
+============================================================
+Lab 07 – Creating and Editing Text Files
+Environment: CentOS Linux 7 (Core)
+Hostname: ip-172-31-10-148
+User: centos
+============================================================
+
+------------------------------------------------------------
+Environment Verification
+------------------------------------------------------------
+
+-bash-4.2$ cat /etc/os-release
+NAME="CentOS Linux"
+VERSION="7 (Core)"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="7"
+PRETTY_NAME="CentOS Linux 7 (Core)"
+
+------------------------------------------------------------
+Task 1 – Creating and Editing with nano
+------------------------------------------------------------
+
+-bash-4.2$ nano first_file.txt
+(Nano editor opened)
+
+Text entered:
+Hello OpenShift!
+This is my first text file.
+
+Saved using Ctrl+O → Enter
+Exited using Ctrl+X
+
+-bash-4.2$ ls -l first_file.txt
+-rw-r--r-- 1 centos centos 53 Feb 23 14:05 first_file.txt
+
+------------------------------------------------------------
+Task 2 – Editing with vi
+------------------------------------------------------------
+
+-bash-4.2$ vi second_file.txt
+(vi editor opened)
+
+Entered Insert Mode using: i
+
+Text added:
+Podman Container Basics:
+1. Images
+2. Containers
+3. Pods
+
+Pressed Esc → Returned to command mode
+Moved to line 2
+Typed: dd
+(Line deleted: "1. Images")
+
+Saved and exited using:
+:wq
+
+------------------------------------------------------------
+Verify File Content
+------------------------------------------------------------
+
+-bash-4.2$ cat second_file.txt
+Podman Container Basics:
+2. Containers
+3. Pods
+
+------------------------------------------------------------
+Task 3 – File Viewing
+------------------------------------------------------------
+
+-bash-4.2$ cat first_file.txt
+Hello OpenShift!
+This is my first text file.
+
+-bash-4.2$ less second_file.txt
+(Output displayed interactively)
+User pressed q to quit.
+
+------------------------------------------------------------
+Task 3 – File Encoding & Line Endings
+------------------------------------------------------------
+
+-bash-4.2$ file first_file.txt
+first_file.txt: ASCII text
+
+-bash-4.2$ sudo yum install -y dos2unix
+Loaded plugins: fastestmirror
+Installing:
+dos2unix.x86_64 7.4.0-3.el7
+Complete!
+
+-bash-4.2$ unix2dos first_file.txt
+unix2dos: converting file first_file.txt to DOS format...
+
+-bash-4.2$ dos2unix first_file.txt
+dos2unix: converting file first_file.txt to Unix format...
+
+------------------------------------------------------------
+Task 4 – Create Podman Configuration File
+------------------------------------------------------------
+
+-bash-4.2$ nano podman_config.conf
+(Nano editor opened)
+
+Content added:
+[storage]
+driver = "overlay"
+runroot = "/var/run/containers/storage"
+graphroot = "/var/lib/containers/storage"
+
+Saved and exited.
+
+------------------------------------------------------------
+Validate File Integrity
+------------------------------------------------------------
+
+-bash-4.2$ grep -n '[[:space:]]$' podman_config.conf
+(No output — no trailing whitespace found)
+
+-bash-4.2$ wc -l podman_config.conf
+4 podman_config.conf
+
+-bash-4.2$ ls -l *.txt *.conf
+-rw-r--r-- 1 centos centos  53 Feb 23 14:05 first_file.txt
+-rw-r--r-- 1 centos centos  49 Feb 23 14:09 second_file.txt
+-rw-r--r-- 1 centos centos 109 Feb 23 14:12 podman_config.conf
+
+-bash-4.2$ file *
+first_file.txt: ASCII text
+second_file.txt: ASCII text
+podman_config.conf: ASCII text
+
+============================================================
+Lab 07 Completed Successfully
+Text Editing & File Management Skills Verified
+============================================================
