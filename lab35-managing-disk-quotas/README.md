@@ -1,4 +1,4 @@
-# 🧪 Lab 15: Managing Disk Quotas (CentOS/RHEL 8/9)
+# 🧪 Lab 35: Managing Disk Quotas (CentOS/RHEL 8/9)
 
 ## 📌 Overview
 This lab demonstrates how to **enable, configure, enforce, and monitor disk quotas** on a Linux system.  
