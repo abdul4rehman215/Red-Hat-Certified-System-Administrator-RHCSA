@@ -1,0 +1,41 @@
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+
+Basic for loop example:
+I like apple
+I like banana
+I like orange
+
+List of .txt files:
+Found file: notes.txt
+Found file: report.txt
+Found file: todo.txt
+
+Count: 1
+Count: 2
+Count: 3
+Count: 4
+Count: 5
+
+Countdown: 3
+Countdown: 2
+Countdown: 1
+Done!
+
+Readable file: control_loop.sh
+Readable file: file_loop.sh
+Readable file: filter_files.sh
+Readable file: for_script.sh
+Readable file: notes.txt
+Readable file: report.txt
+Readable file: todo.txt
+Readable file: until_script.sh
+Readable file: while_script.sh
+
+Number: 1
+Number: 2
+Number: 3
+Number: 4
+Loop exited at 5
