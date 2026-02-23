@@ -1,6 +1,6 @@
 # 🎯 Interview Q&A — Lab 34: Archiving and Compressing Files (RHCSA)
 
-This section contains commonly asked RHCSA and Linux System Administration interview questions related to `tar`, `gzip`, and `bzip2`.
+> This section contains commonly asked RHCSA and Linux System Administration interview questions related to `tar`, `gzip`, and `bzip2`.
 
 ---
 
