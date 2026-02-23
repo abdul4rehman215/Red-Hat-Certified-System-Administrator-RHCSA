@@ -1,0 +1,136 @@
+==============================================================
+Lab 36: journalctl System Log Management
+Environment: CentOS Stream 9
+Shell: -bash-4.2$
+==============================================================
+
+
+--------------------------------------------------------------
+1. systemd-journald Service Status
+--------------------------------------------------------------
+
+● systemd-journald.service - Journal Service
+   Loaded: loaded (/usr/lib/systemd/system/systemd-journald.service; static)
+   Active: active (running) since Mon 2026-08-18 10:36:21 UTC; 1h 12min ago
+     Docs: man:systemd-journald.service(8)
+   Main PID: 378 (systemd-journal)
+   Status: "Processing requests..."
+
+
+--------------------------------------------------------------
+2. hostnamectl
+--------------------------------------------------------------
+
+   Static hostname: ip-172-31-20-144
+         Icon name: computer-vm
+           Chassis: vm
+        Machine ID: 5f2c1f0d9c8a4d0a9b7e3d6f3e2a1c44
+           Boot ID: 9bb2b8ff5d6a4f6a8c91c1c2a3d4e5f6
+    Virtualization: amazon
+  Operating System: CentOS Stream 9
+            Kernel: Linux 5.14.0-xxx.el9.x86_64
+      Architecture: x86-64
+
+
+--------------------------------------------------------------
+3. journalctl -n 20
+--------------------------------------------------------------
+
+Aug 18 11:48:02 ip-172-31-20-144 sudo[2257]: pam_unix(sudo:session): session opened
+Aug 18 11:48:03 ip-172-31-20-144 systemd[1]: Started Session 65 of User root.
+Aug 18 11:48:03 ip-172-31-20-144 sudo[2257]: pam_unix(sudo:session): session closed
+Aug 18 11:47:16 ip-172-31-20-144 sudo[2194]: session closed for user root
+Aug 18 11:46:02 ip-172-31-20-144 sudo[2147]: COMMAND=/usr/bin/journalctl
+
+
+--------------------------------------------------------------
+4. journalctl -p err
+--------------------------------------------------------------
+
+Aug 18 12:02:11 ip-172-31-20-144 systemd[1]: Failed to start nonexistent-service.service: Unit nonexistent-service.service not found.
+Aug 18 12:02:06 ip-172-31-20-144 logger[2550]: Test error message for lab practice
+
+
+--------------------------------------------------------------
+5. journalctl --disk-usage
+--------------------------------------------------------------
+
+Archived and active journals take up 19.0M in the file system.
+
+
+--------------------------------------------------------------
+6. /var/log/journal Directory (Persistent Enabled)
+--------------------------------------------------------------
+
+drwxr-sr-x. 3 root systemd-journal  60 Aug 18 11:58 /var/log/journal
+drwxr-sr-x. 2 root systemd-journal  60 Aug 18 11:58 5f2c1f0d9c8a4d0a9b7e3d6f3e2a1c44
+
+
+--------------------------------------------------------------
+7. journald.conf (Active Configuration)
+--------------------------------------------------------------
+
+[Journal]
+Storage=persistent
+Compress=yes
+SystemMaxUse=2G
+SystemKeepFree=1G
+SystemMaxFileSize=200M
+SystemMaxFiles=10
+RuntimeMaxUse=500M
+RuntimeKeepFree=100M
+MaxRetentionSec=2month
+MaxFileSec=1week
+
+
+--------------------------------------------------------------
+8. Generated Test Logs
+--------------------------------------------------------------
+
+Aug 18 12:02:06 ip-172-31-20-144 logger[2550]: Test info message for lab practice
+Aug 18 12:02:06 ip-172-31-20-144 logger[2550]: Test warning message for lab practice
+Aug 18 12:02:06 ip-172-31-20-144 logger[2550]: Test error message for lab practice
+
+
+--------------------------------------------------------------
+9. SSH Authentication Failure Example
+--------------------------------------------------------------
+
+Aug 18 11:33:21 ip-172-31-20-144 sshd[1762]: Failed password for invalid user admin from 198.51.100.9 port 44712 ssh2
+Aug 18 11:33:21 ip-172-31-20-144 sshd[1762]: pam_unix(sshd:auth): authentication failure
+
+
+--------------------------------------------------------------
+10. system-health-check.sh Execution
+--------------------------------------------------------------
+
+=== System Health Report ===
+Generated on: Mon Aug 18 12:05:44 UTC 2026
+Hostname: ip-172-31-20-144
+
+=== Disk Usage for Journal ===
+Archived and active journals take up 19.0M in the file system.
+
+=== Recent Critical Errors ===
+-- No entries --
+
+=== Failed Services ===
+  UNIT LOAD ACTIVE SUB DESCRIPTION
+0 loaded units listed.
+
+=== Authentication Failures (Last 24 Hours) ===
+Aug 18 11:33:21 ip-172-31-20-144 sshd[1762]: authentication failure
+
+=== Report Complete ===
+
+
+--------------------------------------------------------------
+11. Cron Job Verification
+--------------------------------------------------------------
+
+0 6 * * * /usr/local/bin/system-health-check.sh > /var/log/daily-health-report.log 2>&1
+
+
+==============================================================
+Lab 36 Execution Completed Successfully
+==============================================================
