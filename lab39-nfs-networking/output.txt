@@ -1,0 +1,141 @@
+==============================
+Lab 39: NFS Server + Client
+Verification Outputs
+==============================
+
+------------------------------
+[NFS-SERVER] Package Verification
+------------------------------
+# rpm -qa | grep nfs-utils
+nfs-utils-2.5.4-25.el9.x86_64
+
+# rpm -qa | grep rpcbind
+rpcbind-1.2.6-8.el9.x86_64
+
+------------------------------
+[NFS-SERVER] Export Validation
+------------------------------
+# exportfs -v
+/nfs/shared     <world>(sync,wdelay,hide,no_subtree_check,sec=sys,rw,no_root_squash)
+/nfs/public     <world>(sync,wdelay,hide,no_subtree_check,sec=sys,ro,root_squash)
+/nfs/private    192.168.1.0/24(sync,wdelay,hide,no_subtree_check,sec=sys,rw,root_squash)
+
+------------------------------
+[NFS-SERVER] Service Status
+------------------------------
+# systemctl status nfs-server
+Active: active (exited)
+
+# systemctl status rpcbind
+Active: active (running)
+
+------------------------------
+[NFS-SERVER] RPC Services
+------------------------------
+# rpcinfo -p localhost
+program vers proto port  service
+100000  4    tcp   111   portmapper
+100005  3    tcp 20048   mountd
+100003  4    tcp  2049   nfs
+
+------------------------------
+[NFS-SERVER] Firewall Verification
+------------------------------
+# firewall-cmd --list-services
+cockpit dhcpv6-client mountd nfs rpc-bind ssh
+
+# firewall-cmd --list-ports
+111/tcp 111/udp 2049/tcp 2049/udp 20048/tcp 20048/udp
+
+------------------------------
+[NFS-CLIENT] Export Discovery
+------------------------------
+# showmount -e 192.168.1.100
+Export list for 192.168.1.100:
+/nfs/private 192.168.1.0/24
+/nfs/public  *
+/nfs/shared  *
+
+------------------------------
+[NFS-CLIENT] RPC Visibility
+------------------------------
+# rpcinfo -p 192.168.1.100
+program vers proto port service
+100000  4    tcp   111  portmapper
+100005  3    tcp 20048  mountd
+100003  4    tcp  2049  nfs
+
+------------------------------
+[NFS-CLIENT] Mounted Filesystems
+------------------------------
+# df -h | grep nfs
+192.168.1.100:/nfs/shared   32G  4.1G  28G  13%  /mnt/nfs-shared
+192.168.1.100:/nfs/public   32G  4.1G  28G  13%  /mnt/nfs-public
+192.168.1.100:/nfs/private  32G  4.1G  28G  13%  /mnt/nfs-private
+
+# mount | grep nfs
+192.168.1.100:/nfs/shared  on /mnt/nfs-shared  type nfs4 (rw,vers=4.2,...)
+192.168.1.100:/nfs/public  on /mnt/nfs-public  type nfs4 (ro,vers=4.2,...)
+192.168.1.100:/nfs/private on /mnt/nfs-private type nfs4 (rw,vers=4.2,...)
+
+------------------------------
+[NFS-CLIENT] Access Validation
+------------------------------
+# ls -la /mnt/nfs-shared
+shared_file.txt
+client_test.txt
+
+# cat /mnt/nfs-shared/shared_file.txt
+This is a shared file
+
+# cat /mnt/nfs-public/public_file.txt
+This is a public file
+
+# echo "This should fail" > /mnt/nfs-public/test.txt
+-bash: Permission denied
+
+------------------------------
+[NFS-CLIENT] fstab Validation
+------------------------------
+# tail -n 5 /etc/fstab
+192.168.1.100:/nfs/shared  /mnt/nfs-shared  nfs  defaults,_netdev     0 0
+192.168.1.100:/nfs/public  /mnt/nfs-public  nfs  defaults,_netdev,ro  0 0
+192.168.1.100:/nfs/private /mnt/nfs-private nfs  defaults,_netdev     0 0
+
+# mount -a
+(no errors)
+
+------------------------------
+Network Interruption Test
+------------------------------
+[NFS-SERVER] systemctl stop nfs-server
+
+[NFS-CLIENT] ls /mnt/nfs-shared
+ls: cannot access '/mnt/nfs-shared/': Connection timed out
+
+[NFS-SERVER] systemctl start nfs-server
+
+[NFS-CLIENT] ls /mnt/nfs-shared
+client_test.txt
+shared_file.txt
+
+------------------------------
+Security Verification
+------------------------------
+# ls -Z /nfs/shared
+system_u:object_r:default_t:s0 shared_file.txt
+system_u:object_r:default_t:s0 client_test.txt
+
+# ss -tuln | grep :2049
+tcp LISTEN 0 64 0.0.0.0:2049 0.0.0.0:*
+udp UNCONN 0  0 0.0.0.0:2049 0.0.0.0:*
+
+==============================
+Lab 39 Verification Complete
+==============================
+NFS server configured
+Client mounts validated
+Firewall rules applied
+Persistent mounts working
+Access control behaving as expected
+==============================
