@@ -1,0 +1,146 @@
+============================================================
+Lab 06 – Archiving, Compressing, and Unpacking Files
+Environment: Ubuntu 24.04.1 LTS
+Hostname: ip-172-31-10-167
+User: toor
+============================================================
+
+------------------------------------------------------------
+Environment Verification
+------------------------------------------------------------
+
+toor@ip-172-31-10-167:~$ cat /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+
+toor@ip-172-31-10-167:~$ tar --version
+tar (GNU tar) 1.35
+
+toor@ip-172-31-10-167:~$ gzip --version
+gzip 1.12
+
+toor@ip-172-31-10-167:~$ bzip2 --version
+bzip2, a block-sorting file compressor. Version 1.0.8
+
+------------------------------------------------------------
+Task 1 – Creating Tar Archive
+------------------------------------------------------------
+
+toor@ip-172-31-10-167:~$ mkdir lab_files
+toor@ip-172-31-10-167:~$ cd lab_files
+toor@ip-172-31-10-167:~/lab_files$ touch file1.txt file2.txt file3.txt
+
+toor@ip-172-31-10-167:~/lab_files$ echo "This is file1" > file1.txt
+toor@ip-172-31-10-167:~/lab_files$ echo "This is file2" > file2.txt
+toor@ip-172-31-10-167:~/lab_files$ echo "This is file3" > file3.txt
+
+toor@ip-172-31-10-167:~/lab_files$ tar -cvf archive.tar file1.txt file2.txt file3.txt
+file1.txt
+file2.txt
+file3.txt
+
+toor@ip-172-31-10-167:~/lab_files$ ls -lh
+-rw-r--r-- 1 toor toor   15 Feb 23 13:10 file1.txt
+-rw-r--r-- 1 toor toor   15 Feb 23 13:10 file2.txt
+-rw-r--r-- 1 toor toor   15 Feb 23 13:10 file3.txt
+-rw-r--r-- 1 toor toor 10K Feb 23 13:11 archive.tar
+
+✔ archive.tar created successfully.
+
+toor@ip-172-31-10-167:~/lab_files$ tar -tvf archive.tar
+-rw-r--r-- toor/toor      15 2026-02-23 13:10 file1.txt
+-rw-r--r-- toor/toor      15 2026-02-23 13:10 file2.txt
+-rw-r--r-- toor/toor      15 2026-02-23 13:10 file3.txt
+
+------------------------------------------------------------
+Task 2 – Compress with gzip
+------------------------------------------------------------
+
+toor@ip-172-31-10-167:~/lab_files$ gzip archive.tar
+
+toor@ip-172-31-10-167:~/lab_files$ ls -lh
+-rw-r--r-- 1 toor toor 152 Feb 23 13:11 archive.tar.gz
+-rw-r--r-- 1 toor toor  15 Feb 23 13:10 file1.txt
+-rw-r--r-- 1 toor toor  15 Feb 23 13:10 file2.txt
+-rw-r--r-- 1 toor toor  15 Feb 23 13:10 file3.txt
+
+✔ archive.tar.gz created successfully.
+
+------------------------------------------------------------
+Task 2 – Compress with bzip2
+------------------------------------------------------------
+
+toor@ip-172-31-10-167:~/lab_files$ tar -cvf archive.tar file1.txt file2.txt file3.txt
+file1.txt
+file2.txt
+file3.txt
+
+toor@ip-172-31-10-167:~/lab_files$ bzip2 archive.tar
+
+toor@ip-172-31-10-167:~/lab_files$ ls -lh
+-rw-r--r-- 1 toor toor 172 Feb 23 13:13 archive.tar.bz2
+-rw-r--r-- 1 toor toor 152 Feb 23 13:11 archive.tar.gz
+
+✔ archive.tar.bz2 created successfully.
+
+------------------------------------------------------------
+Task 3 – Extract .tar.gz
+------------------------------------------------------------
+
+toor@ip-172-31-10-167:~/lab_files$ gunzip archive.tar.gz
+
+toor@ip-172-31-10-167:~/lab_files$ tar -xvf archive.tar
+file1.txt
+file2.txt
+file3.txt
+
+✔ Files restored from archive.tar.
+
+------------------------------------------------------------
+Task 3 – Extract .tar.bz2
+------------------------------------------------------------
+
+toor@ip-172-31-10-167:~/lab_files$ bunzip2 archive.tar.bz2
+
+toor@ip-172-31-10-167:~/lab_files$ tar -xvf archive.tar
+file1.txt
+file2.txt
+file3.txt
+
+✔ Files successfully restored.
+
+------------------------------------------------------------
+Task 4 – Create Combined Compressed Archives
+------------------------------------------------------------
+
+toor@ip-172-31-10-167:~/lab_files$ tar -czvf combined.tar.gz file1.txt file2.txt file3.txt
+file1.txt
+file2.txt
+file3.txt
+
+toor@ip-172-31-10-167:~/lab_files$ tar -cjvf combined.tar.bz2 file1.txt file2.txt file3.txt
+file1.txt
+file2.txt
+file3.txt
+
+toor@ip-172-31-10-167:~/lab_files$ ls -lh combined.*
+-rw-r--r-- 1 toor toor 155 Feb 23 13:16 combined.tar.gz
+-rw-r--r-- 1 toor toor 175 Feb 23 13:16 combined.tar.bz2
+
+✔ Both compressed archives created successfully.
+
+------------------------------------------------------------
+Archive Integrity Verification
+------------------------------------------------------------
+
+toor@ip-172-31-10-167:~/lab_files$ tar -tvf combined.tar.gz
+-rw-r--r-- toor/toor 15 2026-02-23 13:10 file1.txt
+-rw-r--r-- toor/toor 15 2026-02-23 13:10 file2.txt
+-rw-r--r-- toor/toor 15 2026-02-23 13:10 file3.txt
+
+============================================================
+Lab 06 Completed Successfully
+Archiving and Compression Skills Verified
+============================================================
