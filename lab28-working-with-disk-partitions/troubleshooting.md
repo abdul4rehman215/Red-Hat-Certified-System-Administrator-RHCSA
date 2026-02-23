@@ -1,4 +1,4 @@
-# 🛠️ Troubleshooting Guide — Lab 8: Working with Disk Partitions
+# 🛠️ Troubleshooting Guide — Lab 28: Working with Disk Partitions
 
 This document covers common issues encountered during disk partitioning,
 formatting, mounting, and persistent configuration.
@@ -12,9 +12,10 @@ You accidentally partitioned the OS disk instead of the practice disk.
 
 Prevention:
 Always verify using:
+```
   lsblk
   sudo fdisk -l
-
+```
 Confirm:
 - OS disk has "/" mounted
 - Practice disk has no important partitions
@@ -33,15 +34,16 @@ Cause:
 A process is using the mount.
 
 Diagnosis:
+``` 
   lsof /mnt/data1
   fuser -v /mnt/data1
-
+```
 Fix:
 - Exit the directory (cd /)
 - Stop the process using it
 - Retry umount
 
-Avoid using -f unless necessary.
+Avoid using `-f` unless necessary.
 
 ------------------------------------------------------------
 3️⃣ Partition Not Showing After fdisk
@@ -51,9 +53,13 @@ Problem:
 New partition created but not visible in lsblk.
 
 Fix:
+```
   sudo partprobe
+```
 OR
+```
   sudo partx -u /dev/sdb
+```
 
 If still not visible:
 Reboot system (rare case).
@@ -69,13 +75,18 @@ Cause:
 Partition not formatted OR wrong filesystem type specified.
 
 Check:
+```
   blkid /dev/sdb1
-
+```
 Fix:
 - Format properly:
-    mkfs.ext4 /dev/sdb1
+```
+     mkfs.ext4 /dev/sdb1
+```
 - Mount using correct type:
+```
     mount -t ext4 /dev/sdb1 /mnt/data1
+```
 
 ------------------------------------------------------------
 5️⃣ System Fails to Boot After Editing /etc/fstab
@@ -86,12 +97,15 @@ Invalid UUID, typo in filesystem type, or wrong mount point.
 
 Prevention:
 Always test using:
+````
   mount -a
-
+````
 If boot fails:
 - Boot into rescue mode
 - Restore backup:
+  ```
     cp /etc/fstab.backup /etc/fstab
+  ```
 
 ------------------------------------------------------------
 6️⃣ "Filesystem has unsupported feature" During fsck
@@ -102,8 +116,9 @@ Using older fsck tools on newer file system features.
 
 Fix:
 Ensure correct utilities installed:
+````
   yum install e2fsprogs xfsprogs -y
-
+````
 ------------------------------------------------------------
 7️⃣ UUID Not Found
 ------------------------------------------------------------
@@ -113,20 +128,20 @@ mount: special device UUID=xxxx does not exist
 
 Fix:
 Re-check UUID:
-  blkid
+  ```blkid```
 
-Update correct UUID in /etc/fstab.
+Update correct UUID in `/etc/fstab`.
 
 ------------------------------------------------------------
 8️⃣ Disk Full Unexpectedly
 ------------------------------------------------------------
 
 Check usage:
-  df -h
+  ```df -h
   du -sh /mnt/data1/*
-
+  ```
 Check inode usage:
-  df -i
+  ```df -i```
 
 Sometimes inode exhaustion causes "disk full".
 
@@ -135,7 +150,7 @@ Sometimes inode exhaustion causes "disk full".
 ------------------------------------------------------------
 
 Use:
-  sudo parted /dev/sdb print
+  ```sudo parted /dev/sdb print```
 
 If corrupted:
 - Backup data immediately
@@ -147,10 +162,10 @@ If corrupted:
 ------------------------------------------------------------
 
 Monitor disk I/O:
-  iostat -x 1 5
+  ```iostat -x 1 5```
 
 Check mount options:
-  mount | grep sdb
+```  mount | grep sdb```
 
 Consider:
 - Using xfs for large data workloads
