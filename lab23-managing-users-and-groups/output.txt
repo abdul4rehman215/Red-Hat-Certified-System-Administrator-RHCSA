@@ -1,0 +1,154 @@
+-bash-4.2# 
+
+john:x:1001:1001::/home/john:/bin/bash
+
+jsmith:x:1002:1002:Jane Smith, Marketing Department:/home/jsmith:/bin/bash
+
+total 16
+drwx------. 2 jsmith jsmith  62 Feb 23 13:10 .
+drwxr-xr-x. 3 root   root    32 Feb 23 13:10 ..
+-rw-r--r--. 1 jsmith jsmith  18 Apr  1  2020 .bash_logout
+-rw-r--r--. 1 jsmith jsmith 193 Apr  1  2020 .bash_profile
+-rw-r--r--. 1 jsmith jsmith 231 Apr  1  2020 .bashrc
+
+webuser:x:995:992:Web Server User:/home/webuser:/sbin/nologin
+
+uid=995(webuser) gid=992(webuser) groups=992(webuser)
+
+john:x:1001:1001::/home/john_new:/bin/bash
+
+total 16
+drwx------. 2 john john  62 Feb 23 13:12 .
+drwxr-xr-x. 4 root root  49 Feb 23 13:12 ..
+-rw-r--r--. 1 john john  18 Apr  1  2020 .bash_logout
+-rw-r--r--. 1 john john 193 Apr  1  2020 .bash_profile
+-rw-r--r--. 1 john john 231 Apr  1  2020 .bashrc
+
+usermod: failed to change user 'jsmith': Shell /bin/zsh does not exist
+
+Loaded plugins: fastestmirror
+Resolving Dependencies
+Installed:
+  zsh.x86_64 0:5.0.2-43.el7
+Complete!
+
+jsmith:x:1002:1002:Jane Smith, Marketing Department:/home/jsmith:/bin/zsh
+
+john:!!:19730:0:99999:7:::
+
+marketing:x:1003:
+developers:x:2000:
+services:x:993:
+
+john : john developers marketing services
+
+jsmith : marketing
+
+uid=1001(john) gid=1001(john) groups=1001(john),2000(developers),1003(marketing),993(services)
+
+uid=1002(jsmith) gid=1003(marketing) groups=1003(marketing)
+
+uid=1003(bdev) gid=2000(developers) groups=2000(developers),1003(marketing)
+
+bdev : developers marketing
+
+Changing password for user john.
+New password: 
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+
+Changing password for user jsmith.
+New password: 
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+
+Changing password for user bdev.
+New password: 
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+
+Last password change                                    : Feb 23, 2026
+Password expires                                        : May 24, 2026
+Password inactive                                       : never
+Account expires                                         : never
+Minimum number of days between password change          : 7
+Maximum number of days between password change          : 90
+Number of days of warning before password expires       : 7
+
+Last password change                                    : password must be changed
+Password expires                                        : password must be changed
+Password inactive                                       : never
+Account expires                                         : never
+Minimum number of days between password change          : 0
+Maximum number of days between password change          : 99999
+Number of days of warning before password expires       : 7
+
+john:x:1001:1001::/home/john_new:/bin/bash
+jsmith:x:1002:1003:Jane Smith, Marketing Department:/home/jsmith:/bin/zsh
+webuser:x:995:992:Web Server User:/home/webuser:/sbin/nologin
+bdev:x:1003:2000:Bob Developer:/home/bdev:/bin/bash
+
+marketing:x:1003:john,bdev
+developers:x:2000:john
+services:x:993:john
+
+Last login: Sun Feb 23 13:20:41 UTC 2026 on pts/0
+
+john
+
+john developers marketing services
+
+logout
+-bash-4.2#
+
+total 0
+drwxr-xr-x.  5 root   root   49 Feb 23 13:12 .
+dr-xr-xr-x. 18 root   root 4096 Feb 23 12:05 ..
+drwx------.  2 bdev   developers 62 Feb 23 13:18 bdev
+drwx------.  2 jsmith marketing  62 Feb 23 13:10 jsmith
+drwx------.  2 john   john       62 Feb 23 13:12 john_new
+
+-rw-r--r--. 1 john john 0 Feb 23 13:23 /home/john_new/john_file.txt
+
+-rw-r--r--. 1 jsmith marketing 0 Feb 23 13:23 /home/jsmith/jsmith_file.txt
+
+total 0
+drwxr-xr-x.  3 root root      23 Feb 23 13:25 .
+drwxr-xr-x. 18 root root    4096 Feb 23 13:25 ..
+drwxrws---.  2 root marketing  6 Feb 23 13:25 marketing
+
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=yes
+
+UID_MIN                  1000
+GID_MIN                  1000
+PASS_MAX_DAYS            99999
+
+uid=1001(john) gid=1001(john) groups=1001(john),2000(developers),1003(marketing),993(services)
+
+root
+
+drwx------. 2 bdev developers 62 Feb 23 13:18 /home/bdev
+
+john : john developers marketing services
+uid=1001(john) gid=1001(john) groups=1001(john),2000(developers),1003(marketing),993(services)
+
+usermod: user 'username' does not exist
+usermod: user 'username' does not exist
+
+john     pts/0        172.31.0.25     Sun Feb 23 13:20   still logged in
+centos   pts/0        172.31.0.25     Sun Feb 23 12:58 - 13:26  (00:28)
+reboot   system boot  3.10.0-1160.el7 Sun Feb 23 12:58 - 13:26  (00:28)
+
+centos    pts/0        2026-02-23 12:58 (172.31.0.25)
+
+ 13:26:41 up  0:28,  1 user,  load average: 0.00, 0.01, 0.05
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+centos   pts/0    172.31.0.25      12:58    0.00s  0.06s  0.00s -bash
+
+userdel: webuser mail spool (/var/spool/mail/webuser) not found
