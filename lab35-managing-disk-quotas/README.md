@@ -4,9 +4,6 @@
 This lab demonstrates how to **enable, configure, enforce, and monitor disk quotas** on a Linux system.  
 The environment uses **CentOS/RHEL-style tooling** and an **XFS root filesystem**, so quota enablement follows **XFS quota options** (`uquota`, `gquota`, `prjquota`) and validation via `xfs_quota`.
 
-> ✅ In many cloud lab images, `/home` is not a separate partition.  
-> For realism, this lab enables quotas on `/` (which contains `/home`).
-
 ---
 
 ## 🎯 Objectives
