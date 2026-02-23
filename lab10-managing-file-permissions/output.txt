@@ -1,0 +1,87 @@
+==============================
+Lab 10 – Managing File Permissions (ugo/rwx)
+Environment: Ubuntu 24.04.1 LTS
+User: toor
+Hostname: ip-172-31-10-251
+==============================
+
+$ cat /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+
+--------------------------------------------------
+
+$ echo "Sample permission file" > example.txt
+(No output)
+
+$ mkdir directory
+(No output)
+
+$ ls -l
+-rw-r--r-- 1 toor toor   23 Feb 23 16:10 example.txt
+drwxr-xr-x 2 toor toor 4096 Feb 23 16:10 directory
+
+--------------------------------------------------
+
+$ chmod u+x example.txt
+(No output)
+
+$ ls -l example.txt
+-rwxr--r-- 1 toor toor 23 Feb 23 16:10 example.txt
+
+--------------------------------------------------
+
+$ chmod 640 example.txt
+(No output)
+
+$ ls -l example.txt
+-rw-r----- 1 toor toor 23 Feb 23 16:10 example.txt
+
+--------------------------------------------------
+
+$ sudo useradd newuser
+(No output)
+
+$ sudo groupadd newgroup
+(No output)
+
+--------------------------------------------------
+
+$ sudo chown newuser example.txt
+(No output)
+
+$ ls -l example.txt
+-rw-r----- 1 newuser toor 23 Feb 23 16:10 example.txt
+
+--------------------------------------------------
+
+$ sudo chgrp newgroup example.txt
+(No output)
+
+$ ls -l example.txt
+-rw-r----- 1 newuser newgroup 23 Feb 23 16:10 example.txt
+
+--------------------------------------------------
+
+$ sudo chown newuser:newgroup example.txt
+(No output)
+
+$ ls -l example.txt
+-rw-r----- 1 newuser newgroup 23 Feb 23 16:10 example.txt
+
+--------------------------------------------------
+
+Cleanup Commands Executed:
+
+$ sudo userdel newuser
+(No output)
+
+$ sudo groupdel newgroup
+(No output)
+
+==============================
+Lab Completed Successfully
+File Permission Management Verified
+==============================
