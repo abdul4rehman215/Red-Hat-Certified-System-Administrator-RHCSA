@@ -1,4 +1,4 @@
-# 🎯 Interview Q&A — Lab 10: Managing Systemd Services
+# 🎯 Interview Q&A — Lab 30: Managing Systemd Services
 
 ---
 
