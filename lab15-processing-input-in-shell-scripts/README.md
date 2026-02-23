@@ -36,11 +36,11 @@ By completing this lab, I was able to:
 lab15-processing-input-in-shell-scripts/
 │
 ├── README.md
-├── commands.md
+├── commands.sh
 ├── scripts/
 │   ├── input_script.sh
 │   └── double_number.sh
-├── outputs.md
+├── outputs.txt
 ├── interview_qna.md
 └── troubleshooting.md
 ```
