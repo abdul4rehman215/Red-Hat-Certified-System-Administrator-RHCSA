@@ -1,4 +1,4 @@
-# 🔐 Lab 06: Configuring SSH for Remote Access
+# 🔐 Lab 26: Configuring SSH for Remote Access
 
 ---
 
@@ -120,7 +120,7 @@ After completing this lab, I:
 
 ```
 
-lab-06-configuring-ssh/
+lab26-configuring-ssh/
 │
 ├── README.md
 ├── commands.sh
