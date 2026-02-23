@@ -1,0 +1,85 @@
+========================================
+Lab 16 – Processing Output of Shell Commands
+Environment: Ubuntu 24.04.1 LTS
+User: toor
+Hostname: ip-172-31-10-377
+========================================
+
+
+--- Task 1: Backticks Example ---
+
+$ echo "Today is `date`"
+Today is Sun Feb 23 17:32:41 UTC 2026
+
+
+$ ./backtick_example.sh
+
+Files in this directory:
+total 8
+-rwxr-xr-x 1 toor toor  68 Feb 23 17:30 backtick_example.sh
+-rw-r--r-- 1 toor toor 123 Feb 23 17:20 notes.txt
+
+
+--- Task 1: $() Syntax Example ---
+
+$ echo "Current user: $(whoami)"
+Current user: toor
+
+
+$ ./dollar_parenthesis.sh
+Number of running processes: 134
+
+
+--- Task 2: System Information Script ---
+
+$ ./system_info.sh
+
+System Information:
+Kernel: 6.8.0-31-generic
+Hostname: ip-172-31-10-377
+
+
+--- Task 2: Multi-line Output Handling ---
+
+$ ./multi_line.sh
+
+Disk Usage Information:
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        30G   11G   20G  34% /
+
+
+--- Task 3: Processing Logged-in Users ---
+
+$ ./process_users.sh
+
+Current Users:
+toor
+Total users logged in: 1
+
+
+--- Task 3: Disk Space Check ---
+
+$ ./disk_check.sh
+Disk space OK: 20GB available
+
+
+--- Task 3: Array Processing of IP Addresses ---
+
+$ ./array_ips.sh
+
+Network Interfaces:
+-     inet 127.0.0.1/8 scope host lo
+-     inet 172.31.10.377/20 brd 172.31.15.255 scope global ens5
+
+
+--- Final Challenge: Large Log File Detection ---
+
+$ ./large_logs.sh
+
+Found 3 large log files
+Total size: 18M
+
+
+========================================
+Shell Output Processing & Automation Verified
+========================================
