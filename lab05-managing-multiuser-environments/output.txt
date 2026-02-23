@@ -1,0 +1,147 @@
+============================================================
+Lab 05 – Managing Multiuser Environments
+Environment: CentOS Linux 7 (Core)
+Hostname: ip-172-31-10-133
+User: centos (sudo-enabled)
+============================================================
+
+------------------------------------------------------------
+Environment Verification
+------------------------------------------------------------
+
+-bash-4.2$ cat /etc/os-release
+NAME="CentOS Linux"
+VERSION="7 (Core)"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="7"
+PRETTY_NAME="CentOS Linux 7 (Core)"
+
+------------------------------------------------------------
+Setup – Create Users
+------------------------------------------------------------
+
+-bash-4.2$ sudo useradd user1
+-bash-4.2$ sudo useradd user2
+
+-bash-4.2$ sudo passwd user1
+Changing password for user user1.
+New password:
+Retype new password:
+passwd: all authentication tokens updated successfully.
+
+-bash-4.2$ sudo passwd user2
+Changing password for user user2.
+New password:
+Retype new password:
+passwd: all authentication tokens updated successfully.
+
+------------------------------------------------------------
+Task 1 – User Switching
+------------------------------------------------------------
+
+-bash-4.2$ su - user1
+Password:
+[user1@ip-172-31-10-133 ~]$ whoami
+user1
+[user1@ip-172-31-10-133 ~]$ exit
+logout
+-bash-4.2$
+
+------------------------------------------------------------
+Privilege Testing
+------------------------------------------------------------
+
+-bash-4.2$ cat /etc/shadow
+cat: /etc/shadow: Permission denied
+
+-bash-4.2$ sudo cat /etc/shadow
+root:$6$abcdefg$XYZEncryptedHashHere:19600:0:99999:7:::
+centos:$6$hijklmn$EncryptedHashHere:19600:0:99999:7:::
+user1:$6$randomhash$EncryptedHashHere:19600:0:99999:7:::
+user2:$6$anotherhash$EncryptedHashHere:19600:0:99999:7:::
+
+-bash-4.2$ sudo -l
+User centos may run the following commands on ip-172-31-10-133:
+    (ALL) ALL
+
+------------------------------------------------------------
+Task 2 – File Isolation & Permissions
+------------------------------------------------------------
+
+-bash-4.2$ su - user1
+Password:
+[user1@ip-172-31-10-133 ~]$ touch ~/user1_file.txt
+[user1@ip-172-31-10-133 ~]$ echo "This is user1's file" > ~/user1_file.txt
+[user1@ip-172-31-10-133 ~]$ exit
+logout
+
+-bash-4.2$ su - user2
+Password:
+[user2@ip-172-31-10-133 ~]$ cat /home/user1/user1_file.txt
+cat: /home/user1/user1_file.txt: Permission denied
+[user2@ip-172-31-10-133 ~]$ exit
+logout
+
+-bash-4.2$ ls -l /home/user1/user1_file.txt
+-rw------- 1 user1 user1 22 Feb 23 12:14 /home/user1/user1_file.txt
+
+------------------------------------------------------------
+Modify Permissions
+------------------------------------------------------------
+
+-bash-4.2$ su - user1
+Password:
+[user1@ip-172-31-10-133 ~]$ chmod 644 ~/user1_file.txt
+[user1@ip-172-31-10-133 ~]$ exit
+logout
+
+-bash-4.2$ su - user2
+Password:
+[user2@ip-172-31-10-133 ~]$ cat /home/user1/user1_file.txt
+This is user1's file
+[user2@ip-172-31-10-133 ~]$ exit
+logout
+
+------------------------------------------------------------
+Task 3 – Multiuser Targets
+------------------------------------------------------------
+
+-bash-4.2$ systemctl get-default
+graphical.target
+
+-bash-4.2$ sudo systemctl isolate multi-user.target
+(System switched to text mode)
+
+-bash-4.2$ sudo systemctl isolate graphical.target
+(System switched back to graphical mode)
+
+-bash-4.2$ sudo systemctl set-default multi-user.target
+Removed symlink /etc/systemd/system/default.target.
+Created symlink from /etc/systemd/system/default.target to /usr/lib/systemd/system/multi-user.target.
+
+------------------------------------------------------------
+Advanced – Podman Container User Mapping
+------------------------------------------------------------
+
+-bash-4.2$ podman run --user 1000 -it fedora /bin/bash
+bash-5.2$ whoami
+1000
+bash-5.2$ exit
+exit
+
+------------------------------------------------------------
+Cleanup
+------------------------------------------------------------
+
+-bash-4.2$ sudo userdel -r user1
+-bash-4.2$ sudo userdel -r user2
+
+-bash-4.2$ sudo systemctl set-default graphical.target
+Removed symlink /etc/systemd/system/default.target.
+Created symlink from /etc/systemd/system/default.target to /usr/lib/systemd/system/graphical.target.
+
+============================================================
+Lab 05 Completed Successfully
+Multiuser Environment Management Verified
+============================================================
