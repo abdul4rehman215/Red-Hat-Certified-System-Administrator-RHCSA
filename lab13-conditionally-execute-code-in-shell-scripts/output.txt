@@ -1,0 +1,33 @@
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+
+Enter a number: 15
+The number is greater than 10.
+
+Enter a number: 12
+Greater than 10.
+
+Enter a number: 10
+Equal to 10.
+
+Enter a number: 5
+Less than 10.
+
+File /etc/passwd exists.
+
+Enter 'yes' or 'no': yes
+You agreed.
+
+Enter 'yes' or 'no': no
+You disagreed.
+
+Enter 'yes' or 'no': maybe
+Invalid input.
+
+Enter a number: 3
+Number is less than 5.
+
+Enter a number: 7
+Number is 5 or greater.
