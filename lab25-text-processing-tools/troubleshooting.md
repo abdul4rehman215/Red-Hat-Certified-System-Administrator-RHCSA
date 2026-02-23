@@ -1,4 +1,4 @@
-# 🛠 Troubleshooting Guide - Lab 05: Working with grep, sed, awk
+# 🛠 Troubleshooting Guide - Lab 25: Working with grep, sed, awk
 
 ---
 
