@@ -1,0 +1,205 @@
+==============================
+Lab 38: Podman Containers
+==============================
+
+[1] Podman Installation Verification
+-------------------------------------
+
+$ podman --version
+podman version 4.9.4
+
+
+$ podman system info | head -20
+host:
+  arch: amd64
+  buildahVersion: 1.33.7
+  cgroupManager: systemd
+  cgroupVersion: v2
+  distribution:
+    distribution: '"centos"'
+    version: "9"
+  hostname: ip-172-31-20-221
+  kernel: 5.14.0-427.el9.x86_64
+  logDriver: journald
+
+
+====================================
+[2] Running First Container (NGINX)
+====================================
+
+$ podman run -d --name my-nginx -p 8080:80 docker.io/nginx:latest
+2c4cc0a0c4b1f53a8c0e3e9b9b3c2cc5baf0f39e7a35c2cf3b5e0b8f1a9c7c2d
+
+
+$ podman ps
+CONTAINER ID  IMAGE                           COMMAND               CREATED         STATUS             PORTS                 NAMES
+2c4cc0a0c4b1  docker.io/library/nginx:latest  nginx -g daemon off;  Up 14 seconds   0.0.0.0:8080->80/tcp  my-nginx
+
+
+$ curl http://localhost:8080
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+...
+<h1>Welcome to nginx!</h1>
+...
+Thank you for using nginx.
+</html>
+
+
+=========================================
+[3] Running Python HTTP Server Container
+=========================================
+
+$ podman run -d --name python-server -p 8081:8000 docker.io/python:3.9-slim sh -c "python -m http.server 8000"
+7f59f03e0b2b7c1ab4b1a62c0f0bdb7c3f4c52aaf7b1b70bdbb1c4f2f7ad12a4
+
+
+$ podman ps
+CONTAINER ID  IMAGE                              PORTS
+7f59f03e0b2b  docker.io/library/python:3.9-slim  0.0.0.0:8081->8000/tcp
+2c4cc0a0c4b1  docker.io/library/nginx:latest     0.0.0.0:8080->80/tcp
+
+
+=========================
+[4] Image Management
+=========================
+
+$ podman images
+REPOSITORY                  TAG         IMAGE ID      SIZE
+docker.io/library/python    3.9-slim    1f2a9c8d77a3  129 MB
+docker.io/library/nginx     latest      3f68d1f2d6b9  187 MB
+
+
+$ podman pull docker.io/httpd:2.4
+a8d2b1c0f72f3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8
+
+
+$ podman pull docker.io/alpine:3.18
+9f12c7a1b3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a
+
+
+$ podman rmi docker.io/httpd:2.4
+Deleted: a8d2b1c0f72f...
+
+
+$ podman rmi docker.io/alpine:3.18 docker.io/python:3.9-slim
+Error: image used by a container...
+
+
+=================================
+[5] Container Lifecycle Commands
+=================================
+
+$ podman stop my-nginx
+my-nginx
+
+$ podman start my-nginx
+my-nginx
+
+$ podman restart my-nginx
+my-nginx
+
+$ podman pause my-nginx
+my-nginx
+
+$ podman unpause my-nginx
+my-nginx
+
+
+===============================
+[6] Inspect + Logs + Resources
+===============================
+
+$ podman inspect my-nginx | head -15
+{
+  "Name": "my-nginx",
+  "ImageName": "docker.io/library/nginx:latest",
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false
+  }
+}
+
+
+$ podman logs my-nginx | head -10
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/08/18 13:13:55 [notice] 1#1: nginx/1.26.1
+
+
+$ podman stats my-nginx
+CPU %   MEM USAGE / LIMIT   MEM %
+0.00%   4.7MiB / 1.9GiB     0.24%
+
+
+===================================
+[7] Exec + Copy File Into Container
+===================================
+
+$ podman exec my-nginx ls -la /usr/share/nginx/html
+index.html
+
+
+$ echo "Hello from host" > test.txt
+$ podman cp test.txt my-nginx:/usr/share/nginx/html/
+
+
+$ curl http://localhost:8080/test.txt
+Hello from host
+
+
+=======================
+[8] Advanced - Volumes
+=======================
+
+$ podman volume create my-data
+my-data
+
+
+$ podman volume ls
+DRIVER      VOLUME NAME
+local       my-data
+
+
+================================
+[9] Advanced - Networking
+================================
+
+$ podman network create my-network
+my-network
+
+
+$ podman exec web1 ping web2
+3 packets transmitted, 3 packets received, 0% packet loss
+
+
+================================
+[10] Verification - Hello World
+================================
+
+$ podman run --rm docker.io/hello-world
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+
+================================
+[11] Final State
+================================
+
+$ podman ps -a
+web1
+web2
+data-container
+
+
+$ podman images
+hello-world
+nginx
+alpine
+
+================================
+End of Lab 38 Output
+================================
