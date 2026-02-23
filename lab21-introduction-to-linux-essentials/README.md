@@ -1,4 +1,4 @@
-# 🐧 Lab 21 – Introduction to Linux Essentials (RHCSA Track)
+# 🐧 Lab 21 – Introduction to Linux Essentials
 
 ## 🎯 Objective
 
