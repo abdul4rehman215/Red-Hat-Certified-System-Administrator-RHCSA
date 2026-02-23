@@ -1,0 +1,246 @@
+========================================
+Lab 24: Configuring User Permissions
+Full Command Output Log
+========================================
+
+-----------------------------
+Task 1: File Ownership (chown)
+-----------------------------
+
+$ ls -l
+total 12
+-rw-rw-r--. 1 centos centos 15 Feb 23 14:02 file1.txt
+-rw-rw-r--. 1 centos centos 15 Feb 23 14:02 file2.txt
+-rw-rw-r--. 1 centos centos 15 Feb 23 14:02 file3.txt
+drwxrwxr-x. 2 centos centos  6 Feb 23 14:02 testdir
+
+$ ls -l | awk '{print $3, $4, $9}' | column -t
+centos  centos  file1.txt
+centos  centos  file2.txt
+centos  centos  file3.txt
+centos  centos  testdir
+
+$ sudo chown root file1.txt
+
+$ ls -l file1.txt
+-rw-rw-r--. 1 root centos 15 Feb 23 14:02 file1.txt
+
+$ sudo chown centos file1.txt
+
+$ ls -l file1.txt
+-rw-rw-r--. 1 centos centos 15 Feb 23 14:02 file1.txt
+
+$ sudo chown :users file2.txt
+
+$ ls -l file2.txt
+-rw-rw-r--. 1 centos users 15 Feb 23 14:02 file2.txt
+
+$ sudo chown root:root file3.txt
+
+$ ls -l file3.txt
+-rw-rw-r--. 1 root root 15 Feb 23 14:02 file3.txt
+
+$ sudo chown centos:centos file3.txt
+
+$ ls -l file3.txt
+-rw-rw-r--. 1 centos centos 15 Feb 23 14:02 file3.txt
+
+--------------------------------
+Recursive Ownership Change
+--------------------------------
+
+$ sudo chown -R root:root testdir/
+
+$ ls -lR testdir/
+testdir/:
+total 0
+-rw-r--r--. 1 root root 0 Feb 23 14:06 nested_file.txt
+drwxr-xr-x. 3 root root 38 Feb 23 14:06 subdir1
+
+testdir/subdir1:
+total 0
+-rw-r--r--. 1 root root 0 Feb 23 14:06 another_file.txt
+drwxr-xr-x. 2 root root 27 Feb 23 14:06 subdir2
+
+testdir/subdir1/subdir2:
+total 0
+-rw-r--r--. 1 root root 0 Feb 23 14:06 deep_file.txt
+
+$ sudo chown -R centos:centos testdir/
+
+$ ls -lR testdir/
+testdir/:
+total 0
+-rw-r--r--. 1 centos centos 0 Feb 23 14:06 nested_file.txt
+drwxr-xr-x. 3 centos centos 38 Feb 23 14:06 subdir1
+
+testdir/subdir1:
+total 0
+-rw-r--r--. 1 centos centos 0 Feb 23 14:06 another_file.txt
+drwxr-xr-x. 2 centos centos 27 Feb 23 14:06 subdir2
+
+testdir/subdir1/subdir2:
+total 0
+-rw-r--r--. 1 centos centos 0 Feb 23 14:06 deep_file.txt
+
+--------------------------------
+Task 2: Permissions (chmod)
+--------------------------------
+
+$ ls -l test_script.sh
+-rw-rw-r--. 1 centos centos 37 Feb 23 14:10 test_script.sh
+
+$ ./test_script.sh
+-bash: ./test_script.sh: Permission denied
+
+$ chmod u+x test_script.sh
+
+$ ls -l test_script.sh
+-rwxrw-r--. 1 centos centos 37 Feb 23 14:10 test_script.sh
+
+$ ./test_script.sh
+Hello from script!
+
+$ chmod go-w file1.txt
+$ chmod a+r file2.txt
+$ chmod o-rwx file3.txt
+
+$ ls -l file*.txt
+-rw-r--r--. 1 centos centos 15 Feb 23 14:02 file1.txt
+-rw-rw-r--. 1 centos users  15 Feb 23 14:02 file2.txt
+-rw-rw-----. 1 centos centos 15 Feb 23 14:02 file3.txt
+
+--------------------------------
+Numeric Permissions
+--------------------------------
+
+$ ls -l numeric_test.txt file*.txt
+-rw-r--r--. 1 centos centos 15 Feb 23 14:02 file1.txt
+-rw-------. 1 centos users  15 Feb 23 14:02 file2.txt
+-rwxrwxrwx. 1 centos centos 15 Feb 23 14:02 file3.txt
+-rwxr-xr-x. 1 centos centos  0 Feb 23 14:14 numeric_test.txt
+
+--------------------------------
+Recursive Permission Fix
+--------------------------------
+
+$ ls -lR testdir/
+testdir/:
+total 0
+-rw-r--r--. 1 centos centos 0 Feb 23 14:06 nested_file.txt
+drwxr-xr-x. 3 centos centos 38 Feb 23 14:06 subdir1
+
+testdir/subdir1:
+total 0
+-rw-r--r--. 1 centos centos 0 Feb 23 14:06 another_file.txt
+drwxr-xr-x. 2 centos centos 27 Feb 23 14:06 subdir2
+
+testdir/subdir1/subdir2:
+total 0
+-rw-r--r--. 1 centos centos 0 Feb 23 14:06 deep_file.txt
+
+--------------------------------
+Task 3: ACL Management
+--------------------------------
+
+$ getfacl sensitive_file.txt
+# file: sensitive_file.txt
+# owner: centos
+# group: centos
+user::rw-
+group::r--
+other::r--
+
+$ setfacl -m u:testuser1:rw sensitive_file.txt
+
+$ getfacl sensitive_file.txt
+# file: sensitive_file.txt
+# owner: centos
+# group: centos
+user::rw-
+user:testuser1:rw-
+group::r--
+mask::rw-
+other::r--
+
+$ ls -l sensitive_file.txt
+-rw-rw-r--+ 1 centos centos 20 Feb 23 14:22 sensitive_file.txt
+
+$ setfacl -m g:developers:rwx shared_document.txt
+
+$ getfacl shared_document.txt
+# file: shared_document.txt
+# owner: centos
+# group: centos
+user::rw-
+group::r--
+group:developers:rwx
+mask::rwx
+other::r--
+
+--------------------------------
+Default ACL Inheritance
+--------------------------------
+
+$ getfacl project_dir/
+# file: project_dir/
+# owner: centos
+# group: centos
+user::rwx
+group::r-x
+other::r-x
+default:user::rwx
+default:user:testuser1:rw-
+default:group::r-x
+default:group:developers:rwx
+default:mask::rwx
+default:other::r--
+
+$ getfacl project_dir/new_file.txt
+# file: project_dir/new_file.txt
+# owner: centos
+# group: centos
+user::rw-
+user:testuser1:rw-
+group::r-x
+group:developers:rwx
+mask::rwx
+other::r--
+
+--------------------------------
+ACL Removal
+--------------------------------
+
+$ setfacl -b sensitive_file.txt
+
+$ getfacl sensitive_file.txt
+# file: sensitive_file.txt
+# owner: centos
+# group: centos
+user::rw-
+group::r--
+other::r--
+
+$ ls -l sensitive_file.txt
+-rw-r--r--. 1 centos centos 20 Feb 23 14:22 sensitive_file.txt
+
+--------------------------------
+Shared Project Directory
+--------------------------------
+
+$ ls -ld /tmp/shared_project
+drwxrwsr-x+ 2 centos developers 6 Feb 23 14:42 /tmp/shared_project
+
+--------------------------------
+Troubleshooting Checks
+--------------------------------
+
+$ whoami
+centos
+
+$ groups
+centos wheel
+
+--------------------------------
+Lab Cleanup Completed
+--------------------------------
