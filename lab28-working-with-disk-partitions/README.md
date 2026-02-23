@@ -30,7 +30,7 @@ This lab demonstrates practical **Linux disk administration** on a CentOS/RHEL-b
 
 ## 🧰 Lab Environment
 
-* CentOS/RHEL-based cloud machine (Al Nafi EC2-style)
+* CentOS/RHEL-based cloud machine (EC2)
 * User: `centos` (sudo enabled)
 * Tools available: `fdisk`, `lsblk`, `mkfs.*`, `blkid`, `mount`, `umount`, `parted`, `fsck`, `xfs_repair`
 * Extra virtual disk provided for practice (secondary NVMe disk)
