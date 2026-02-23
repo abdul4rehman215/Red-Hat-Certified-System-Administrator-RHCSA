@@ -1,0 +1,220 @@
+==========================
+Lab 37 - Output Capture
+Using Cron Jobs for Task Automation
+==========================
+
+------------------------------------------------------------
+Task 1.1 - Verify Cron Service Status
+------------------------------------------------------------
+$ systemctl status crond
+● crond.service - Command Scheduler
+   Loaded: loaded (/usr/lib/systemd/system/crond.service; enabled; vendor preset: enabled)
+   Active: active (running) since Mon 2026-08-18 12:18:04 UTC; 7min ago
+ Main PID: 812 (crond)
+    Tasks: 1 (limit: 2339)
+   Memory: 1.6M
+   CGroup: /system.slice/crond.service
+           └─812 /usr/sbin/crond -n
+
+Aug 18 12:18:04 ip-172-31-20-199 systemd[1]: Started Command Scheduler.
+Aug 18 12:18:04 ip-172-31-20-199 crond[812]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 93% if used.)
+Aug 18 12:18:04 ip-172-31-20-199 crond[812]: (CRON) INFO (running with inotify support)
+
+
+$ sudo systemctl enable crond
+Created symlink /etc/systemd/system/multi-user.target.wants/crond.service → /usr/lib/systemd/system/crond.service.
+
+
+------------------------------------------------------------
+Task 1.3 - Create First Cron Job (Uptime Logger)
+------------------------------------------------------------
+$ crontab -e
+(no crontab for centos - using an empty one)
+(editor opened: nano)
+
+(added)
+*/5 * * * * echo "$(date): System uptime: $(uptime)" >> /home/centos/system_log.txt
+
+
+$ crontab -l
+# Log system uptime every 5 minutes
+*/5 * * * * echo "$(date): System uptime: $(uptime)" >> /home/centos/system_log.txt
+
+
+------------------------------------------------------------
+Task 1.4 - Backup Script + Cron Schedule
+------------------------------------------------------------
+$ mkdir -p /home/centos/backups
+
+$ ls -la /home/centos/backup_script.sh
+-rwxr-xr-x. 1 centos centos 604 Aug 18 12:27 /home/centos/backup_script.sh
+
+
+$ crontab -l
+# Log system uptime every 5 minutes
+*/5 * * * * echo "$(date): System uptime: $(uptime)" >> /home/centos/system_log.txt
+
+# Daily backup at 3AM
+0 3 * * * /home/centos/backup_script.sh
+
+
+------------------------------------------------------------
+Task 1.5 - Disk Monitor Script + Cron Schedule
+------------------------------------------------------------
+$ ls -la /home/centos/disk_monitor.sh
+-rwxr-xr-x. 1 centos centos 525 Aug 18 12:29 /home/centos/disk_monitor.sh
+
+
+$ crontab -l
+# Log system uptime every 5 minutes
+*/5 * * * * echo "$(date): System uptime: $(uptime)" >> /home/centos/system_log.txt
+
+# Daily backup at 3AM
+0 3 * * * /home/centos/backup_script.sh
+
+# Disk usage check every hour
+0 * * * * /home/centos/disk_monitor.sh
+
+
+------------------------------------------------------------
+Task 2.1 - Install and Configure 'at' Service
+------------------------------------------------------------
+$ systemctl status atd
+● atd.service - Deferred execution scheduler
+   Loaded: loaded (/usr/lib/systemd/system/atd.service; disabled; vendor preset: disabled)
+   Active: inactive (dead)
+
+
+$ sudo yum install at -y
+Package at-3.1.23-5.el9.x86_64 is already installed.
+Nothing to do.
+
+
+$ sudo systemctl start atd
+$ sudo systemctl enable atd
+Created symlink /etc/systemd/system/multi-user.target.wants/atd.service → /usr/lib/systemd/system/atd.service.
+
+
+$ systemctl status atd
+● atd.service - Deferred execution scheduler
+   Loaded: loaded (/usr/lib/systemd/system/atd.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2026-08-18 12:30:41 UTC; 3s ago
+ Main PID: 2117 (atd)
+    Tasks: 1 (limit: 2339)
+   Memory: 1.1M
+
+
+------------------------------------------------------------
+Task 2.2 - Schedule One-Time Tasks with 'at'
+------------------------------------------------------------
+$ echo "echo 'Hello from at command!' >> /home/centos/at_test.txt" | at now + 2 minutes
+warning: commands will be executed using /bin/sh
+job 1 at Mon Aug 18 12:33:00 2026
+
+
+$ echo "echo 'Scheduled task executed at $(date)' >> /home/centos/scheduled_task.txt" | at 16:30
+warning: commands will be executed using /bin/sh
+job 2 at Mon Aug 18 16:30:00 2026
+
+
+$ echo "echo 'Tomorrow task: $(date)' >> /home/centos/tomorrow_task.txt" | at 10:00 tomorrow
+warning: commands will be executed using /bin/sh
+job 3 at Tue Aug 19 10:00:00 2026
+
+
+$ atq
+4	Mon Aug 18 12:32:00 2026 a centos
+1	Mon Aug 18 12:33:00 2026 a centos
+2	Mon Aug 18 16:30:00 2026 a centos
+3	Tue Aug 19 10:00:00 2026 a centos
+
+
+$ at -c 1 | head -15
+#!/bin/sh
+# atrun uid=1000 gid=1000
+umask 22
+PATH=/usr/local/bin:/usr/bin:/bin
+HOME=/home/centos
+LOGNAME=centos
+cd /home/centos || {
+         echo 'Execution directory inaccessible' >&2
+         exit 1
+}
+echo 'Hello from at command!' >> /home/centos/at_test.txt
+
+
+$ atrm 2
+
+$ atq
+4	Mon Aug 18 12:32:00 2026 a centos
+1	Mon Aug 18 12:33:00 2026 a centos
+3	Tue Aug 19 10:00:00 2026 a centos
+
+
+$ atq | awk '{print $1}' | xargs -r atrm
+
+$ atq
+(no output)
+
+
+------------------------------------------------------------
+Task 3.2 - Monitor Cron Execution via journald
+------------------------------------------------------------
+$ sudo journalctl -u crond --no-pager -n 10
+Aug 18 12:30:01 ip-172-31-20-199 crond[812]: (centos) CMD (echo "$(date): System uptime: $(uptime)" >> /home/centos/system_log.txt)
+Aug 18 12:32:01 ip-172-31-20-199 crond[812]: (centos) CMD (/home/centos/cron_test.sh)
+Aug 18 12:34:01 ip-172-31-20-199 crond[812]: (centos) CMD (/home/centos/cron_test.sh)
+Aug 18 12:35:01 ip-172-31-20-199 crond[812]: (centos) CMD (echo "$(date): System uptime: $(uptime)" >> /home/centos/system_log.txt)
+
+
+------------------------------------------------------------
+Task 3.5 - Verify Cron Job Output Files
+------------------------------------------------------------
+$ ls -la /home/centos/system_log.txt
+-rw-r--r--. 1 centos centos 584 Aug 18 12:40 /home/centos/system_log.txt
+
+
+$ tail -5 /home/centos/system_log.txt
+Mon Aug 18 12:20:01 UTC 2026: System uptime: 12:20:01 up 22 min,  1 user,  load average: 0.00, 0.01, 0.00
+Mon Aug 18 12:25:01 UTC 2026: System uptime: 12:25:01 up 27 min,  1 user,  load average: 0.00, 0.01, 0.00
+Mon Aug 18 12:30:01 UTC 2026: System uptime: 12:30:01 up 32 min,  1 user,  load average: 0.00, 0.01, 0.00
+Mon Aug 18 12:35:01 UTC 2026: System uptime: 12:35:01 up 37 min,  1 user,  load average: 0.00, 0.01, 0.00
+Mon Aug 18 12:40:01 UTC 2026: System uptime: 12:40:01 up 42 min,  1 user,  load average: 0.00, 0.01, 0.00
+
+
+$ ls -la /home/centos/cron_test.log
+-rw-r--r--. 1 centos centos 1880 Aug 18 12:40 /home/centos/cron_test.log
+
+
+$ tail -10 /home/centos/cron_test.log
+2026-08-18 12:36:01: USER: centos
+2026-08-18 12:36:01: HOME: /home/centos
+2026-08-18 12:36:01: PATH: /usr/bin:/bin
+2026-08-18 12:36:01: PWD: /home/centos
+2026-08-18 12:36:01: System uptime: 12:36:01 up 38 min,  1 user,  load average: 0.00, 0.01, 0.00
+2026-08-18 12:36:01: Log file is writable - OK
+2026-08-18 12:36:01: Cron test script completed
+2026-08-18 12:38:01: Cron test script started
+2026-08-18 12:38:01: USER: centos
+2026-08-18 12:38:01: Cron test script completed
+
+
+$ ls -la /home/centos/disk_monitor.log
+-rw-r--r--. 1 centos centos 66 Aug 18 12:00 /home/centos/disk_monitor.log
+
+
+$ tail -2 /home/centos/disk_monitor.log
+Mon Aug 18 12:00:01 UTC 2026: OK - Disk usage is 14%
+
+
+$ ls -la /home/centos/at_test.txt
+-rw-r--r--. 1 centos centos 22 Aug 18 12:33 /home/centos/at_test.txt
+
+
+$ cat /home/centos/at_test.txt
+Hello from at command!
+
+
+==========================
+End of Output Capture
+==========================
