@@ -1,0 +1,162 @@
+toor@ip-172-31-10-219:~$ pwd
+/home/toor
+
+toor@ip-172-31-10-219:~$ which tar gzip bzip2
+/usr/bin/tar
+/usr/bin/gzip
+/usr/bin/bzip2
+
+toor@ip-172-31-10-219:~$ mkdir ~/lab14-archive
+toor@ip-172-31-10-219:~$ cd ~/lab14-archive
+
+toor@ip-172-31-10-219:~/lab14-archive$ tree . || find . -type f
+bash: tree: command not found
+./documents/reports/monthly_report.txt
+./documents/reports/quarterly_analysis.txt
+./documents/presentations/linux_basics.txt
+./documents/presentations/sysadmin_workshop.txt
+./documents/linux_guide.txt
+./documents/network_config.txt
+./documents/security_policy.txt
+./data/logs/system.log
+./data/logs/application.log
+./data/backups/db_backup.txt
+./data/backups/config_backup.txt
+
+toor@ip-172-31-10-219:~/lab14-archive$ tar -cf documents_archive.tar documents/
+
+toor@ip-172-31-10-219:~/lab14-archive$ ls -lh documents_archive.tar
+-rw-r--r-- 1 toor toor 10K Aug 18 12:12 documents_archive.tar
+
+toor@ip-172-31-10-219:~/lab14-archive$ tar -tf documents_archive.tar
+documents/
+documents/reports/
+documents/reports/monthly_report.txt
+documents/reports/quarterly_analysis.txt
+documents/presentations/
+documents/presentations/linux_basics.txt
+documents/presentations/sysadmin_workshop.txt
+documents/linux_guide.txt
+documents/network_config.txt
+documents/security_policy.txt
+
+toor@ip-172-31-10-219:~/lab14-archive$ tar -cvf data_archive.tar data/
+data/
+data/logs/
+data/logs/system.log
+data/logs/application.log
+data/backups/
+data/backups/db_backup.txt
+data/backups/config_backup.txt
+
+toor@ip-172-31-10-219:~/lab14-archive$ mkdir extraction_test
+toor@ip-172-31-10-219:~/lab14-archive$ cd extraction_test
+
+toor@ip-172-31-10-219:~/lab14-archive/extraction_test$ tar -xf ../documents_archive.tar
+
+toor@ip-172-31-10-219:~/lab14-archive/extraction_test$ ls -la
+total 12
+drwxr-xr-x 3 toor toor 4096 Aug 18 12:14 .
+drwxr-xr-x 5 toor toor 4096 Aug 18 12:14 ..
+drwxr-xr-x 4 toor toor 4096 Aug 18 12:14 documents
+
+toor@ip-172-31-10-219:~/lab14-archive/extraction_test$ tree documents/ || find documents/ -type f
+bash: tree: command not found
+documents/reports/monthly_report.txt
+documents/reports/quarterly_analysis.txt
+documents/presentations/linux_basics.txt
+documents/presentations/sysadmin_workshop.txt
+documents/linux_guide.txt
+documents/network_config.txt
+documents/security_policy.txt
+
+toor@ip-172-31-10-219:~/lab14-archive$ tar -cf absolute_archive.tar -P /home/toor/lab14-archive/documents/
+tar: Removing leading `/' from member names
+
+toor@ip-172-31-10-219:~/lab14-archive$ dd if=/dev/zero of=large_file.txt bs=1M count=10
+10+0 records in
+10+0 records out
+10485760 bytes (10 MB, 10 MiB) copied, 0.0187325 s, 560 MB/s
+
+toor@ip-172-31-10-219:~/lab14-archive$ ls -lh large_file.txt
+-rw-r--r-- 1 toor toor 11M Aug 18 12:19 large_file.txt
+
+toor@ip-172-31-10-219:~/lab14-archive$ gzip large_file.txt
+
+toor@ip-172-31-10-219:~/lab14-archive$ ls -lh large_file.txt.gz
+-rw-r--r-- 1 toor toor 11K Aug 18 12:19 large_file.txt.gz
+
+toor@ip-172-31-10-219:~/lab14-archive$ bzip2 -c large_file.txt > large_file.txt.bz2
+
+toor@ip-172-31-10-219:~/lab14-archive$ ls -lh large_file.txt.bz2
+-rw-r--r-- 1 toor toor 70B Aug 18 12:21 large_file.txt.bz2
+
+Compression Comparison:
+Original file: 11M
+gzip compressed: 11K
+bzip2 compressed: 70B
+
+Archive Size Comparison:
+-rw-r--r-- 1 toor toor 20K Aug 18 12:18 documents_archive.tar
+-rw-r--r-- 1 toor toor 447 Aug 18 12:22 documents_compressed.tar.gz
+-rw-r--r-- 1 toor toor 492 Aug 18 12:22 documents_compressed.tar.bz2
+
+Gzip archive test result: 0
+Bzip2 archive test result: 0
+Tar gzip archive test result: 0
+Tar bzip2 archive test result: 0
+
+Archive contents verification:
+documents/
+documents/reports/
+documents/reports/monthly_report.txt
+documents/reports/quarterly_analysis.txt
+documents/presentations/
+documents/presentations/linux_basics.txt
+documents/presentations/sysadmin_workshop.txt
+documents/linux_guide.txt
+documents/network_config.txt
+documents/security_policy.txt
+
+SUCCESS: All files restored correctly!
+
+Selectively restored files:
+selective_restore/documents/linux_guide.txt
+selective_restore/data/logs/system.log
+selective_restore/data/logs/application.log
+
+Pattern-based restored files:
+pattern_restore/documents/reports/monthly_report.txt
+pattern_restore/documents/reports/quarterly_analysis.txt
+
+Verifying archive: complete_backup.tar.gz
+Testing gzip compressed tar archive...
+SUCCESS: Archive is valid
+Archive contains 17 files
+
+Verifying archive: complete_backup.tar.bz2
+Testing bzip2 compressed tar archive...
+SUCCESS: Archive is valid
+Archive contains 17 files
+
+Archive Summary Report
+======================
+Date: Mon Aug 18 12:29:33 UTC 2026
+
+Archive: complete_backup.tar.gz
+Size: 1.4K
+Files: 17
+Created: Aug 18 12:24
+
+Archive: complete_backup.tar.bz2
+Size: 1.4K
+Files: 17
+Created: Aug 18 12:24
+
+Archive OK
+Archive OK
+
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        30G  7.2G   23G  24% /
+
+4.0K    complete_backup.tar.gz
