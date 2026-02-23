@@ -1,4 +1,4 @@
-# 📝 Lab 05: Working with Text Processing Tools (grep, sed, awk)
+# 📝 Lab 25: Working with Text Processing Tools (grep, sed, awk)
 
 > **RHCSA Focus:** This lab builds practical command-line text processing skills used daily for log review, config validation, and quick reporting.
 
