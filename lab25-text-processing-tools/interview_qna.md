@@ -1,4 +1,4 @@
-# 🎯 Interview Q&A -  Lab 05: Working with Text Processing Tools (grep, sed, awk)
+# 🎯 Interview Q&A -  Lab 25: Working with Text Processing Tools (grep, sed, awk)
 
 ---
 
