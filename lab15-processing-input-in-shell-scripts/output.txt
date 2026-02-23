@@ -1,0 +1,76 @@
+========================================
+Lab 15 – Processing Input in Shell Scripts
+Environment: Ubuntu 24.04.1 LTS
+User: toor
+Hostname: ip-172-31-10-341
+========================================
+
+
+--- Task 1: Positional Parameters ---
+
+$ ./input_script.sh apple banana cherry
+
+First argument: apple
+Second argument: banana
+All arguments: apple banana cherry
+Total arguments: 3
+
+
+--- Task 2: Interactive Input ---
+
+$ ./input_script.sh
+Enter your name: Hassan
+Hello, Hassan! You provided 0 arguments.
+
+
+--- Task 2: Directory via Argument ---
+
+$ ./input_script.sh /tmp
+
+total 12
+drwx------ 2 root root 4096 Feb 23 17:10 systemd-private-xxxx
+-rw-r--r-- 1 toor toor    0 Feb 23 17:11 testfile
+
+
+--- Task 2: Directory via Prompt ---
+
+$ ./input_script.sh
+Enter a directory path: /etc
+
+total 840
+-rw-r--r-- 1 root root   3028 Feb 20 passwd
+-rw-r--r-- 1 root root   1800 Feb 20 group
+...
+
+
+--- Task 3: Invalid Directory Handling ---
+
+$ ./input_script.sh /invalidpath
+
+Error: /invalidpath is not a valid directory.
+
+
+--- Exit Code Verification ---
+
+$ echo $?
+1
+
+
+--- Task 4: set -e Script ---
+
+$ ./double_number.sh 10
+Result: 20
+
+
+--- Task 4: Invalid Numeric Input ---
+
+$ ./double_number.sh abc
+
+./double_number.sh: line 4: abc: syntax error: operand expected (error token is "abc")
+
+(Script exits immediately due to set -e)
+
+
+========================================
+Shell Input Processing & Error Handling Verified
+========================================
