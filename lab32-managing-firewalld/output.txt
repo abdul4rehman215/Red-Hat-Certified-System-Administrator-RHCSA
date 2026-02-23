@@ -1,0 +1,255 @@
+==============================================================
+Lab 32: Managing Firewall with firewalld
+Environment: CentOS/RHEL 8/9
+Shell Prompt: -bash-4.2$
+==============================================================
+
+--------------------------------------------------------------
+Task 1.1: firewalld Service Status
+--------------------------------------------------------------
+
+-bash-4.2$ sudo systemctl status firewalld
+● firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
+   Active: active (running) since Fri 2026-08-18 11:06:12 UTC; 4min 18s ago
+     Docs: man:firewalld(1)
+ Main PID: 842 (firewalld)
+    Tasks: 2 (limit: 2315)
+   Memory: 25.6M
+   CGroup: /system.slice/firewalld.service
+           └─842 /usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid
+
+Aug 18 11:06:12 lab-server-01 systemd[1]: Starting firewalld - dynamic firewall daemon...
+Aug 18 11:06:12 lab-server-01 systemd[1]: Started firewalld - dynamic firewall daemon.
+
+-bash-4.2$ sudo firewall-cmd --state
+running
+
+-bash-4.2$ sudo firewall-cmd --list-all
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: eth0
+  sources:
+  services: cockpit dhcpv6-client ssh
+  ports:
+  protocols:
+  forward: yes
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+
+--------------------------------------------------------------
+Task 1.2: Adding HTTP Service
+--------------------------------------------------------------
+
+-bash-4.2$ sudo firewall-cmd --add-service=http
+success
+
+-bash-4.2$ sudo firewall-cmd --list-services
+cockpit dhcpv6-client http ssh
+
+-bash-4.2$ sudo firewall-cmd --add-service=http --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --reload
+success
+
+--------------------------------------------------------------
+Task 1.3: Managing Ports
+--------------------------------------------------------------
+
+-bash-4.2$ sudo firewall-cmd --add-port=8080/tcp
+success
+
+-bash-4.2$ sudo firewall-cmd --add-port=3000-3005/tcp
+success
+
+-bash-4.2$ sudo firewall-cmd --add-port=8080/tcp --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --add-port=3000-3005/tcp --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --remove-port=3000-3005/tcp --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --add-port=53/udp --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --reload
+success
+
+-bash-4.2$ sudo firewall-cmd --list-ports
+8080/tcp 53/udp
+
+--------------------------------------------------------------
+Task 2.1: Zones Overview
+--------------------------------------------------------------
+
+-bash-4.2$ sudo firewall-cmd --get-default-zone
+public
+
+-bash-4.2$ sudo firewall-cmd --get-active-zones
+public
+  interfaces: eth0
+
+-bash-4.2$ sudo firewall-cmd --set-default-zone=internal
+success
+
+-bash-4.2$ sudo firewall-cmd --get-default-zone
+internal
+
+--------------------------------------------------------------
+Task 2.2: Interface Assignment
+--------------------------------------------------------------
+
+-bash-4.2$ sudo firewall-cmd --zone=public --change-interface=eth0 --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --get-zone-of-interface=eth0
+public
+
+-bash-4.2$ sudo firewall-cmd --zone=trusted --add-source=192.168.1.0/24 --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --zone=trusted --remove-source=192.168.1.0/24 --permanent
+success
+
+--------------------------------------------------------------
+Task 2.3: Custom Service Creation
+--------------------------------------------------------------
+
+-bash-4.2$ sudo firewall-cmd --permanent --new-service=myapp
+success
+
+-bash-4.2$ sudo firewall-cmd --permanent --service=myapp --set-description="My Custom Application"
+success
+
+-bash-4.2$ sudo firewall-cmd --permanent --service=myapp --set-short="MyApp"
+success
+
+-bash-4.2$ sudo firewall-cmd --permanent --service=myapp --add-port=9090/tcp
+success
+
+-bash-4.2$ sudo firewall-cmd --zone=public --add-service=myapp --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --reload
+success
+
+-bash-4.2$ sudo firewall-cmd --zone=public --list-services
+cockpit http https myapp ssh
+
+--------------------------------------------------------------
+Task 3.1: Testing Port Accessibility
+--------------------------------------------------------------
+
+-bash-4.2$ sudo python3 -m http.server 8080 &
+[1] 2147
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+
+-bash-4.2$ curl http://localhost:8080
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Directory listing for /</title>
+ </head>
+ <body>
+  <h2>Directory listing for /</h2>
+  <hr>
+  <ul>
+   <li><a href=".bash_history">.bash_history</a></li>
+   <li><a href=".bash_logout">.bash_logout</a></li>
+   <li><a href=".bash_profile">.bash_profile</a></li>
+   <li><a href=".bashrc">.bashrc</a></li>
+  </ul>
+  <hr>
+ </body>
+</html>
+
+-bash-4.2$ nmap -p 8080 192.168.1.101
+Starting Nmap 7.92 ( https://nmap.org ) at 2026-08-18 11:28 UTC
+Nmap scan report for 192.168.1.101
+Host is up (0.00024s latency).
+
+PORT     STATE SERVICE
+8080/tcp open  http-proxy
+
+Nmap done: 1 IP address (1 host up) scanned in 0.26 seconds
+
+-bash-4.2$ nmap -p 9999 192.168.1.101
+Starting Nmap 7.92 ( https://nmap.org ) at 2026-08-18 11:28 UTC
+Nmap scan report for 192.168.1.101
+Host is up (0.00023s latency).
+
+PORT     STATE  SERVICE
+9999/tcp closed distinct
+
+Nmap done: 1 IP address (1 host up) scanned in 0.25 seconds
+
+--------------------------------------------------------------
+Rich Rule Testing
+--------------------------------------------------------------
+
+-bash-4.2$ sudo firewall-cmd --add-rich-rule='rule family="ipv4" source address="192.168.1.100" service name="ssh" accept' --permanent
+success
+
+-bash-4.2$ sudo firewall-cmd --list-rich-rules
+rule family="ipv4" source address="192.168.1.100" service name="ssh" accept
+
+-bash-4.2$ sudo firewall-cmd --remove-rich-rule='rule family="ipv4" source address="192.168.1.100" service name="ssh" accept' --permanent
+success
+
+--------------------------------------------------------------
+Verification Script Output
+--------------------------------------------------------------
+
+-bash-4.2$ ./firewall-test.sh
+===============================================
+🔥 Firewall Configuration Verification Script
+===============================================
+
+1️⃣ Checking firewalld service status...
+active
+
+2️⃣ Current default zone:
+public
+
+3️⃣ Active zones and associated interfaces:
+public
+  interfaces: eth0
+
+4️⃣ Services allowed in default zone:
+cockpit http https myapp ssh
+
+5️⃣ Open ports in default zone:
+8080/tcp 53/udp
+
+6️⃣ Rich rules configured:
+
+7️⃣ Permanent configuration (default zone):
+public
+  services: cockpit http https myapp ssh
+  ports: 53/udp 8080/tcp
+
+8️⃣ Runtime configuration (active zone):
+public (active)
+  services: cockpit http https myapp ssh
+  ports: 8080/tcp 53/udp
+
+9️⃣ Log denied setting:
+all
+
+🔎 Firewall state:
+running
+
+===============================================
+✅ Firewall Verification Complete
+===============================================
+
+==============================================================
+Lab 32 Completed Successfully
+==============================================================
