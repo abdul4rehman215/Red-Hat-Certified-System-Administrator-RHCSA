@@ -1,0 +1,181 @@
+====================================================
+Lab 01 – Understanding Shell Basics
+Execution Output Log
+Environment: Ubuntu 24.04.1 LTS
+User: toor
+====================================================
+
+
+----------------------------------------------------
+OS Verification
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ cat /etc/os-release
+
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
+ID=ubuntu
+ID_LIKE=debian
+
+
+----------------------------------------------------
+Command Structure Example
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ ls -l /home
+
+total 4
+drwxr-xr-x 3 toor toor 4096 Feb 23 09:10 toor
+
+
+----------------------------------------------------
+Task 2 – Listing Files
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ ls
+
+Desktop  Documents  Downloads  Music  Pictures  Public  Templates  Videos
+
+
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ ls -l
+
+total 32
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Desktop
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Documents
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Downloads
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Music
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Pictures
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Public
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Templates
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Videos
+
+
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ ls -a
+
+.  ..  .bash_history  .bash_logout  .bashrc  .profile
+Desktop  Documents  Downloads  Music  Pictures  Public  Templates  Videos
+
+
+----------------------------------------------------
+Task 2 – Print Working Directory
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ pwd
+
+/home/toor
+
+
+----------------------------------------------------
+Task 2 – Change Directory
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ cd ~
+toor@ip-172-31-10-182:~$ pwd
+
+/home/toor
+
+
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ cd /tmp
+toor@ip-172-31-10-182:/tmp$ pwd
+
+/tmp
+
+
+----------------------------------------------------
+
+toor@ip-172-31-10-182:/tmp$ cd ..
+toor@ip-172-31-10-182:/$ pwd
+
+/
+
+
+----------------------------------------------------
+Task 3 – Output Redirection
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ ls -l > file_list.txt
+(No terminal output — redirected to file)
+
+
+toor@ip-172-31-10-182:~$ cat file_list.txt
+
+total 32
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Desktop
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Documents
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Downloads
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Music
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Pictures
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Public
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Templates
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Videos
+
+
+----------------------------------------------------
+Task 3 – Append Output
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ date >> file_list.txt
+
+
+toor@ip-172-31-10-182:~$ cat file_list.txt
+
+total 32
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Desktop
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Documents
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Downloads
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Music
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Pictures
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Public
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Templates
+drwxr-xr-x 2 toor toor 4096 Feb 23 09:10 Videos
+Sun Feb 23 09:42:11 UTC 2026
+
+
+----------------------------------------------------
+Task 3 – Input Redirection
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ echo -e "Alice\nBob\nCharlie" > names.txt
+
+
+toor@ip-172-31-10-182:~$ sort < names.txt
+
+Alice
+Bob
+Charlie
+
+
+----------------------------------------------------
+Additional Practice – Command Piping
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ ls -l | grep ".txt"
+
+-rw-r--r-- 1 toor toor  384 Feb 23 09:42 file_list.txt
+-rw-r--r-- 1 toor toor   18 Feb 23 09:41 names.txt
+
+
+----------------------------------------------------
+Human-Readable File Sizes
+----------------------------------------------------
+
+toor@ip-172-31-10-182:~$ ls -lh
+
+total 40K
+drwxr-xr-x 2 toor toor 4.0K Feb 23 09:10 Desktop
+-rw-r--r-- 1 toor toor  384 Feb 23 09:42 file_list.txt
+-rw-r--r-- 1 toor toor   18 Feb 23 09:41 names.txt
+
+
+====================================================
+End of Lab 01 Output
+====================================================
