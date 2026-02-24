@@ -11,7 +11,7 @@
 <div align="center">
 
 <!-- PLATFORM -->
-![OS](https://img.shields.io/badge/OS-RHEL%208%20%7C%209-red?style=for-the-badge&logo=redhat)
+![RHEL](https://img.shields.io/badge/OS%20%7C%20Red%20Hat-Enterprise%20Linux%208%20%7C%209-EE0000?style=for-the-badge&logo=redhat&logoColor=EE0000)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04%20LTS-orange?style=for-the-badge&logo=ubuntu)
 ![Linux](https://img.shields.io/badge/Linux-System%20Administration-black?style=for-the-badge&logo=linux)
 ![Shell](https://img.shields.io/badge/Shell-Bash-success?style=for-the-badge&logo=gnu-bash)
@@ -27,7 +27,7 @@
 ![Security](https://img.shields.io/badge/Security-SELinux%20%26%20Firewall-red?style=for-the-badge)
 ![Storage](https://img.shields.io/badge/Storage-LVM%20%26%20Quotas-yellow?style=for-the-badge)
 ![Automation](https://img.shields.io/badge/Automation-Bash%20%26%20Cron-orange?style=for-the-badge)
-![Containers](https://img.shields.io/badge/Containers-Podman-2496ED?style=for-the-badge&logo=podman)
+![Containers](https://img.shields.io/badge/Containers-Podman-892CA0?style=for-the-badge&logo=podman)
 
 <!-- ================= REPO METADATA ================= -->
 
