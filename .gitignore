@@ -1,0 +1,98 @@
+# =====================================================
+# OS / Editor Junk
+# =====================================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.temp
+.vscode/
+.idea/
+
+# =====================================================
+# Logs & Runtime Output
+# (Keeps individual tracked output.txt safe if committed manually)
+# =====================================================
+*.log
+*.out
+*.err
+*.journal
+logs/
+outputs/
+reports/
+exports/
+container_logs/
+
+# Common generated lab logs
+cron_test.log
+system_log.txt
+backup_log.txt
+disk_monitor.log
+daily-health-report.log
+podman.log
+
+# =====================================================
+# Archives / Compressed Files
+# =====================================================
+*.tar
+*.tar.gz
+*.tgz
+*.tar.bz2
+*.tbz2
+*.gz
+*.bz2
+*.zip
+
+# =====================================================
+# Python (if used in automation scripts)
+# =====================================================
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+.ipynb_checkpoints/
+
+# =====================================================
+# Secrets / Credentials (IMPORTANT)
+# =====================================================
+secrets/
+*.pem
+*.key
+*.p12
+id_rsa
+id_rsa.pub
+authorized_keys
+.ssh/
+
+# =====================================================
+# Temporary Lab Files / History
+# =====================================================
+*.history
+acl_backup.txt
+textprocessor.sh
+
+# =====================================================
+# System / Mount Backups
+# =====================================================
+fstab.backup
+
+# =====================================================
+# Quota Files (RHEL Labs)
+# =====================================================
+aquota.*
+quota.*
+
+# =====================================================
+# NFS Temporary Mount Test Directories
+# =====================================================
+mnt/
+mount_test/
+
+# =====================================================
+# PID Files
+# =====================================================
+*.pid
