@@ -493,6 +493,14 @@ No unauthorized systems were accessed or tested.
 
 ---
 
+## 🌐 Labs Portfolio Post on LinkedIn
+
+I also shared this Lab series Portfolio on LinkedIn with a concise portfolio summary, key highlights, and implementation context.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-View%20Project%20Post-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/posts/abdul4rehman215_red-hat-certified-system-administrator-labsrepo-activity-7452740571229523969-sZm4?)
+
+---
+
 # ⭐ Final Note
 
 This repository represents structured, **hands-on Linux administration** capability — not theoretical study.
